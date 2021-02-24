@@ -54,17 +54,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4225580339962089710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 379faef6a95aa440781f3873babe4887, type: 3}
     m_FontSize: 140
@@ -89,9 +89,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4369065082735945914}
   - component: {fileID: 4369065082735945912}
-  - component: {fileID: 1120576110}
+  - component: {fileID: 9062866107440451132}
   - component: {fileID: 1120576109}
-  - component: {fileID: 1088965559617320634}
+  - component: {fileID: 8846340499715469390}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -128,7 +128,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4369065082735945917}
   m_CullTransparentMesh: 0
---- !u!114 &1120576110
+--- !u!114 &9062866107440451132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,12 +137,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4369065082735945917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0cab851de1814bf186b265818a3836d, type: 3}
+  m_Script: {fileID: 11500000, guid: 908a4c7628a945842a5f6b5dd2b4c650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   menuButtonController: {fileID: 0}
-  animator: {fileID: 1120576109}
-  animatorFunctions: {fileID: 1088965559617320634}
+  animator: {fileID: 0}
+  animatorFunctions: {fileID: 0}
   thisIndex: 0
 --- !u!95 &1120576109
 Animator:
@@ -154,7 +154,7 @@ Animator:
   m_GameObject: {fileID: 4369065082735945917}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e24c88aa152534c0eb3c45f276618181, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -163,7 +163,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1088965559617320634
+--- !u!114 &8846340499715469390
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4369065082735945917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dce8674ab06ca40cea0d93549e34c9d1, type: 3}
+  m_Script: {fileID: 11500000, guid: fc4581da02b9c5747bdd80b9c1ba1dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   menuButtonController: {fileID: 0}
@@ -231,17 +231,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8428365700978325577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 268c91f086896472381cb0fb4add5ba2, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -251,3 +251,4 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
