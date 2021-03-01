@@ -18,6 +18,8 @@ public class NewNetworkDiscovery : NetworkDiscoveryBase<NetworkRequestMessage, N
 
     public long ServerId { get; private set; }
 
+    public string GameCode { get; private set; }
+
     [Tooltip("Transport to be advertised during discovery")]
     public Transport transport;
 
@@ -27,6 +29,7 @@ public class NewNetworkDiscovery : NetworkDiscoveryBase<NetworkRequestMessage, N
     public override void Start()
     {
         ServerId = RandomLong();
+        GameCode = GameCodeGenerator.Generate();
 
         // active transport gets initialized in awake
         // so make sure we set it here in Start()  (after awakes)
@@ -58,11 +61,14 @@ public class NewNetworkDiscovery : NetworkDiscoveryBase<NetworkRequestMessage, N
         {
             // this is an example reply message,  return your own
             // to include whatever is relevant for your game
-            return new NetworkResponseMessage
+            var response = new NetworkResponseMessage
             {
                 serverId = ServerId,
+                gameCode = GameCode,
                 uri = transport.ServerUri()
             };
+
+            return response;
         }
         catch (NotImplementedException)
         {

@@ -74,7 +74,7 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
         scrollViewPos = GUILayout.BeginScrollView(scrollViewPos);
 
         foreach (NetworkResponseMessage info in discoveredServers.Values)
-            if (GUILayout.Button(info.EndPoint.Address.ToString()))
+            if (GUILayout.Button(info.gameCode))
                 Connect(info);
 
         GUILayout.EndScrollView();
