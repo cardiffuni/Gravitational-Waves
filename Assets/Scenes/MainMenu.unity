@@ -1878,6 +1878,8 @@ GameObject:
   - component: {fileID: 962991017}
   - component: {fileID: 962991019}
   - component: {fileID: 962991018}
+  - component: {fileID: 962991021}
+  - component: {fileID: 962991020}
   m_Layer: 0
   m_Name: Network
   m_TagString: Untagged
@@ -1943,6 +1945,59 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &962991020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962991016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Port: 7777
+  NoDelay: 1
+  Interval: 10
+  FastResend: 2
+  CongestionWindow: 0
+  SendWindowSize: 128
+  ReceiveWindowSize: 128
+  debugLog: 0
+  debugGUI: 0
+--- !u!114 &962991021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962991016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d1daf9e7dbcb64aa647cb332054ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  autoStartServerBuild: 1
+  showDebugMessages: 0
+  serverTickRate: 30
+  offlineScene: 
+  onlineScene: 
+  transport: {fileID: 962991020}
+  networkAddress: localhost
+  maxConnections: 4
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 8872462076811691049, guid: a5bdca0a2315d43499be7dcef473fbc7, type: 3}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs: []
+  Zone: {fileID: 3460729395543957449, guid: de939020b5e2aa5489ebcc4002d75d54, type: 3}
+  subScenes:
+  - Assets/Scenes/Locations/LIGOMainBuilding.unity
 --- !u!1 &1021480117
 GameObject:
   m_ObjectHideFlags: 0
