@@ -8,7 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(NewNetworkDiscovery))]
 public class NewNetworkDiscoveryHUD : MonoBehaviour
 {
-    readonly Dictionary<long, NetworkResponseMessage> discoveredServers = new Dictionary<long, NetworkResponseMessage>();
     Vector2 scrollViewPos = Vector2.zero;
 
     public NewNetworkDiscovery newNetworkDiscovery;
@@ -43,14 +42,14 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
 
         if (GUILayout.Button("Find Servers"))
         {
-            discoveredServers.Clear();
+            ServerListManager.DiscoveredServers.Clear();
             newNetworkDiscovery.StartDiscovery();
         }
 
         // LAN Host
         if (GUILayout.Button("Start Host"))
         {
-            discoveredServers.Clear();
+            ServerListManager.DiscoveredServers.Clear();
             NetworkManager.singleton.StartHost();
             newNetworkDiscovery.AdvertiseServer();
         }
@@ -58,7 +57,7 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
         // Dedicated server
         if (GUILayout.Button("Start Server"))
         {
-            discoveredServers.Clear();
+            ServerListManager.DiscoveredServers.Clear();
             NetworkManager.singleton.StartServer();
 
             newNetworkDiscovery.AdvertiseServer();
@@ -68,12 +67,12 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
 
         // show list of found server
 
-        GUILayout.Label($"Discovered Servers [{discoveredServers.Count}]:");
+        GUILayout.Label($"Discovered Servers [{ServerListManager.DiscoveredServers.Count}]:");
 
         // servers
         scrollViewPos = GUILayout.BeginScrollView(scrollViewPos);
 
-        foreach (NetworkResponseMessage info in discoveredServers.Values)
+        foreach (NetworkResponseMessage info in ServerListManager.DiscoveredServers.Values)
             if (GUILayout.Button(info.gameCode))
                 Connect(info);
 
@@ -88,7 +87,7 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
     public void OnDiscoveredServer(NetworkResponseMessage info)
     {
         // Note that you can check the versioning to decide if you can connect to the server or not using this method
-        discoveredServers[info.serverId] = info;
+        ServerListManager.AddServer(info);
     }
 }
 
