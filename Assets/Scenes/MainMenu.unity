@@ -1993,7 +1993,7 @@ MonoBehaviour:
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 8872462076811691049, guid: a5bdca0a2315d43499be7dcef473fbc7, type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs: []
   Zone: {fileID: 3460729395543957449, guid: de939020b5e2aa5489ebcc4002d75d54, type: 3}
   subScenes:
