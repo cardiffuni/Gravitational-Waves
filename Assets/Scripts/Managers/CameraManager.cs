@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Managers {
     public static class CameraManager {
-        public static Camera Main { get; private set; }
+        public static Camera Main => Camera.main;
         public static Camera Current { get; private set; }
         public static bool Ready { get; private set; }
 
@@ -45,13 +45,6 @@ namespace Game.Managers {
         }
 
         public static void Reset() {
-            GameObject cameraObj = GameObject.Find("Main Camera");
-            if (cameraObj != null) {
-                Main = cameraObj.GetComponent<Camera>();
-            } else {
-                Main = new GameObject("Main Camera").AddComponent<Camera>();
-            }
-
             Current = Main;
         }
 

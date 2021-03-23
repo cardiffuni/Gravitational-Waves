@@ -12,6 +12,8 @@ namespace Game.Managers.Controllers
     {
         public CharacterController characterController;
 
+        public Camera PlayerCamera { get; private set; }
+
         void OnValidate()
         {
             if (characterController == null)
@@ -23,28 +25,13 @@ namespace Game.Managers.Controllers
             characterController.enabled = isLocalPlayer;
         }
 
-        public override void OnStartLocalPlayer()
-        {
-            Camera.main.orthographic = true;
-            Camera.main.transform.SetParent(transform);
-            Camera.main.transform.localPosition = new Vector3(0f, 30f, -45f);
-            //Camera.main.transform.localEulerAngles = new Vector3(10f, 0f, 0f);
-            Camera.main.transform.localEulerAngles = new Vector3(30f, 0f, 0f);
-            Camera.main.orthographicSize = 10f;
-            Camera.main.nearClipPlane = -50f;
-            transform.Rotate(0f, 45f, 0f);
+        public override void OnStartLocalPlayer() {
+            PlayerCamera = transform.Find("Player Camera").GetComponent<Camera>();
+            CameraManager.Select(PlayerCamera);
         }
 
-        void OnDisable()
-        {
-            if (isLocalPlayer && Camera.main != null)
-            {
-                Camera.main.orthographic = true;
-                Camera.main.transform.SetParent(null);
-                Camera.main.transform.localPosition = new Vector3(0f, 70f, 0f);
-                Camera.main.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
-                Camera.main.orthographicSize = 40f;
-            }
+        void OnDisable() {
+            CameraManager.Overview();
         }
 
         [Header("Movement Settings")]
