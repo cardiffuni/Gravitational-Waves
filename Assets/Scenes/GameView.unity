@@ -443,7 +443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 26774210766757222, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 240.7083
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 26774210766757222, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_SizeDelta.y
@@ -451,7 +451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 26774210766757222, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 125.35415
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 26774210766757222, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2035,7 +2035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7312251014541892994, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 240.7083
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7312251014541892994, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2043,7 +2043,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7312251014541892994, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 125.35415
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7312251014541892994, guid: 066a07f91e0b1a141a3677e5fd229d8a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2536,6 +2536,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2174673230179670994, guid: 3626af3d7e37826489a805f8dcc7005f, type: 3}
+      propertyPath: networkManager
+      value: 
+      objectReference: {fileID: 2174673228518428665}
     - target: {fileID: 2174673230179671005, guid: 3626af3d7e37826489a805f8dcc7005f, type: 3}
       propertyPath: m_Name
       value: Network
@@ -2586,3 +2590,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3626af3d7e37826489a805f8dcc7005f, type: 3}
+--- !u!114 &2174673228518428665 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2174673230179671006, guid: 3626af3d7e37826489a805f8dcc7005f, type: 3}
+  m_PrefabInstance: {fileID: 2174673228518428664}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d1daf9e7dbcb64aa647cb332054ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

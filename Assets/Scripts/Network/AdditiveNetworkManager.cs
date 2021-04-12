@@ -40,13 +40,6 @@ namespace Mirror.Examples.Additive
                 StartHost();
             }
 
-            /*if (autoCreatePlayer) {
-                ClientScene.AddPlayer(NetworkClient.connection);
-            }*/
-
-            // load all subscenes on the server only
-            StartCoroutine(LoadSubScenes());
-
             // Instantiate Zone Handler on server only
             Instantiate(Zone);
         }
@@ -60,6 +53,12 @@ namespace Mirror.Examples.Additive
                 yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
                 if (logger.LogEnabled()) logger.Log($"Loaded {sceneName}");
             }
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            StartCoroutine(LoadSubScenes());
         }
 
         public override void OnStopServer()

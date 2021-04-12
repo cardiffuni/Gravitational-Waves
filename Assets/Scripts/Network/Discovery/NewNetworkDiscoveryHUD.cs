@@ -7,11 +7,13 @@ using UnityEngine;
 [DisallowMultipleComponent]
 [AddComponentMenu("Network/NewNetworkDiscoveryHUD")]
 [RequireComponent(typeof(NewNetworkDiscovery))]
+[RequireComponent(typeof(AdditiveNetworkManager))]
 public class NewNetworkDiscoveryHUD : MonoBehaviour
 {
     Vector2 scrollViewPos = Vector2.zero;
 
     public NewNetworkDiscovery newNetworkDiscovery;
+    public NetworkManager networkManager;
 
 #if UNITY_EDITOR
     void OnValidate()
@@ -19,6 +21,8 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
         if (newNetworkDiscovery == null)
         {
             newNetworkDiscovery = GetComponent<NewNetworkDiscovery>();
+            networkManager = GetComponent<AdditiveNetworkManager>();
+
             UnityEditor.Events.UnityEventTools.AddPersistentListener(newNetworkDiscovery.OnServerFound, OnDiscoveredServer);
             UnityEditor.Undo.RecordObjects(new Object[] { this, newNetworkDiscovery }, "Set NetworkDiscovery");
         }
@@ -83,7 +87,8 @@ public class NewNetworkDiscoveryHUD : MonoBehaviour
 
     void Connect(NetworkResponseMessage info)
     {
-        NetworkManager.singleton.StartClient(info.uri);
+        // NetworkManager.singleton.StartClient(info.uri);
+        networkManager.StartClient(info.uri);
     }
 
     public void OnDiscoveredServer(NetworkResponseMessage info)
