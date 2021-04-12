@@ -24,6 +24,9 @@ namespace Mirror.Examples.Additive
 
         public override void Start() {
 
+            StartCoroutine(LoadSubScenes());
+
+
             var isHost = MySceneManager.GetSceneArgument<bool>("GameView", "IsHost");
             if (isHost)
             {
@@ -53,12 +56,6 @@ namespace Mirror.Examples.Additive
                 yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
                 if (logger.LogEnabled()) logger.Log($"Loaded {sceneName}");
             }
-        }
-
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            StartCoroutine(LoadSubScenes());
         }
 
         public override void OnStopServer()
