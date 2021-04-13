@@ -35,7 +35,8 @@ public class ServerListManager : MonoBehaviour
 
     public static void AddServer(NetworkResponseMessage serverData)
     {
-        DiscoveredServers.Add(serverData.gameCode, serverData);
+        if (!DiscoveredServers.ContainsKey(serverData.gameCode))
+            DiscoveredServers.Add(serverData.gameCode, serverData);
     }
 
     public static void RemoveServerByCode(string gameCode)
