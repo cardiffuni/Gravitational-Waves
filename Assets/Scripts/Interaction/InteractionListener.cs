@@ -1,4 +1,5 @@
 using Game.Managers;
+using Game.Managers.Controllers;
 using Game.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,8 +34,15 @@ public class InteractionListener : MonoBehaviour, IInteractible {
 
     public UnityEvent OnInteraction { get; set; }
 
+    private PlayerController localPlayerController;
+
     public void OnEnable() {
         OnInteraction = new UnityEvent();
+    }
+
+    private void Start()
+    {
+        localPlayerController = FindObjectOfType<PlayerController>();
     }
 
     public void Interact() {
@@ -43,14 +51,35 @@ public class InteractionListener : MonoBehaviour, IInteractible {
 
     public void Update() {
 
+        if (localPlayerController == null) return;
+        
         if (IsInteractableBy(InteractionMethod.Key))
         {
-            foreach (var keyCode in GetTriggerKeys())
+            if (Vector3.Distance(transform.position, localPlayerController.gameObject.transform.position) <= triggerRadius)
             {
-                if (Input.GetKeyDown(keyCode)) {
-                    Interact();
-                    break;
+                foreach (var keyCode in GetTriggerKeys())
+                {
+                    if (Input.GetKeyDown(keyCode))
+                    {
+                        Interact();
+                        break;
+                    }
                 }
+            }
+        }
+    }
+
+    // TODO: Currently clicks on the sphere collider also trigger the interaction. 
+    // Change this so it only registers on the specified collider.
+    public void OnMouseDown()
+    {
+        if (localPlayerController == null) return;
+
+        if (IsInteractableBy(InteractionMethod.Mouse))
+        {
+            if (Vector3.Distance(transform.position, localPlayerController.gameObject.transform.position) <= triggerRadius)
+            {
+                Interact();
             }
         }
     }
