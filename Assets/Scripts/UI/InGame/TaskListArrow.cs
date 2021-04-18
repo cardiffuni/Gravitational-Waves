@@ -21,10 +21,10 @@ public class TaskListArrow : UIUtils
     /// </summary>
     public void ToggleRotation()
     {
-        if (!gameObject.LeanIsTweening())
+        /*if (!gameObject.LeanIsTweening())
         {
             RotateZBy(_nextRotation, RotationDuration);
             _nextRotation *= -1;
-        }
+        }*/
     }
 }
