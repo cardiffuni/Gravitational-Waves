@@ -1,3 +1,4 @@
+using Game.Managers;
 using Game.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +12,6 @@ public enum InteractionMethod
     Key
 }
 
-[RequireComponent(typeof(SphereCollider))]
-[RequireComponent(typeof(NetworkProximityFinder))]
 public class InteractionListener : MonoBehaviour, IInteractible { 
 
     [Tooltip("Toggle whether this Game Object can be interacted with.")]
@@ -34,20 +33,8 @@ public class InteractionListener : MonoBehaviour, IInteractible {
 
     public UnityEvent OnInteraction { get; set; }
 
-    private SphereCollider sphereCollider;
-
-    private NetworkProximityFinder networkProximityChecker;
-
     public void OnEnable() {
         OnInteraction = new UnityEvent();
-    }
-
-    public void Start()
-    {
-        sphereCollider = GetComponent<SphereCollider>();
-        sphereCollider.isTrigger = true;
-        sphereCollider.radius = triggerRadius;
-        networkProximityChecker = transform.GetComponent<NetworkProximityFinder>();
     }
 
     public void Interact() {
@@ -58,31 +45,12 @@ public class InteractionListener : MonoBehaviour, IInteractible {
 
         if (IsInteractableBy(InteractionMethod.Key))
         {
-            float distance = networkProximityChecker.DistanceToLocalConn();
-            if (distance >= 0 && distance <= triggerRadius)
+            foreach (var keyCode in GetTriggerKeys())
             {
-                foreach (var keyCode in GetTriggerKeys())
-                {
-                    if (Input.GetKeyDown(keyCode)) {
-                        Debug.LogFormat("Key {0} triggered", keyCode);
-                        Interact();
-                        break;
-                    }
+                if (Input.GetKeyDown(keyCode)) {
+                    Interact();
+                    break;
                 }
-            }
-        }
-    }
-
-    // TODO: Currently clicks on the sphere collider also trigger the interaction. 
-    // Change this so it only registers on the specified collider.
-    public void OnMouseDown()
-    {
-        if (IsInteractableBy(InteractionMethod.Mouse))
-        {
-            float distance = networkProximityChecker.DistanceToLocalConn();
-            if (distance >= 0 && distance <= triggerRadius)
-            {
-                Interact();
             }
         }
     }
