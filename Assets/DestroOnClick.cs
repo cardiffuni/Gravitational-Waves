@@ -5,12 +5,21 @@ using UnityEngine.UI;
 
 public class DestroOnClick : MonoBehaviour
 {
-    public GameObject Bottle;
-    public GameObject Mirror;
+    public GameObject bottle;
+    public Graphic mirror;
+    public Color colour;
+
+    public void Start()
+    {
+        mirror.GetComponent<Graphic>();
+        colour = Color.white;
+        mirror.color = colour;
+    }
     public void OnClick()
     {
-        Destroy(Bottle);
-        Mirror.GetComponent<Image>().color = new Color32(255, 170, 211, 0);
+        Destroy(bottle);
+        colour = Color.Lerp(Color.white, Color.magenta, Mathf.PingPong(Time.time, 4));
+        mirror.color = colour;
     }
     
 }

@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class FirstContactApply : MonoBehaviour
 {
-    Graphic mirror;
-    [SerializeField] [Range(0f, 1f)] float lerpTime;
+    //Graphic mirror;
+    //[SerializeField] [Range(0f, 1f)] float lerpTime;
 
-    [SerializeField] Color myColor;
+    //[SerializeField] Color myColor;
 
-    public void ApplyFirstContact()
-    {
-        mirror = GetComponent<Graphic>();
+    //public void ApplyFirstContact()
+    //{
+    //    mirror = GetComponent<Graphic>();
 
-        mirror.color = Color.Lerp(mirror.color, myColor, lerpTime);
-        mirror.color = myColor;
-    }
+    //    mirror.color = Color.Lerp(mirror.color, myColor, lerpTime);
+    //    mirror.color = myColor;
+    //}
 }
