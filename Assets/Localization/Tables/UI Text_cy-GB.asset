@@ -226,5 +226,13 @@ MonoBehaviour:
     m_Localized: Straen vs Amser
     m_Metadata:
       m_Items: []
+  - m_Id: 31497685778845696
+    m_Localized: "Lob\xEFo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31498233525587968
+    m_Localized: Cadarnhau
+    m_Metadata:
+      m_Items: []
   references:
     version: 1

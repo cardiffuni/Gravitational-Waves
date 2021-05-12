@@ -19,6 +19,9 @@ namespace Game.Managers {
             LoadSceneMainMenu = 4,
             LoadSceneGameView = 5,
 
+            LobbyHost = 20,
+            LobbyConnect = 21,
+
             InteractionWithObject = 51,
             InteractionWithArea = 52,
 
@@ -45,6 +48,9 @@ namespace Game.Managers {
                 {ActionsEnum.LoadSceneOptions, LoadSceneOptionsMenu },
                 {ActionsEnum.LoadSceneMainMenu, LoadSceneMenuMain },
                 {ActionsEnum.LoadSceneGameView, LoadSceneGameView },
+
+                {ActionsEnum.LobbyHost, LobbyHost },
+                {ActionsEnum.LobbyConnect, LobbyConnect },
 
                 {ActionsEnum.InteractionWithObject, InteractionWithObject },
                 {ActionsEnum.InteractionWithArea, InteractionWithArea },
@@ -96,6 +102,16 @@ namespace Game.Managers {
             MySceneManager.LoadScene("GameView");
         }
 
+        public static void LobbyConnect() {
+            Debug.Log("Action: Connect To Lobby");
+            MySceneManager.LoadScene("GameLobby");
+        }
+
+        public static void LobbyHost() {
+            Debug.Log("Action: Host Lobby");
+            NetworkManager.NetworkController.StartHost();
+            MySceneManager.LoadScene("GameLobby");
+        }
 
         public static void InteractionWithObject() {
             Debug.Log("Action: Interaction With Object");

@@ -7,14 +7,18 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using Mirror;
 
 namespace Game.Managers {
     public static class InstanceManager {
 
         public static GameObject Operator { get; private set; }
-        public static GameObject InstanceController { get; private set; }
-        public static GameObject KeyController { get; private set; }
-        public static GameObject MouseController { get; private set; }
+
+        public static InstanceController InstanceController { get; private set; }
+        public static KeyController KeyController { get; private set; }
+        public static MouseController MouseController { get; private set; }
+        public static Mirror.NetworkManager NetworkController { get; private set; }
+
         public static GameObject TempStorage { get; private set; }
         public static GameObject CharactersContainer { get; private set; }
         public static GameObject ObjectInstancesContainer { get; private set; }
@@ -39,16 +43,11 @@ namespace Game.Managers {
             } else {
                 Operator = parent;
             }
-            
 
-            InstanceController = new GameObject("Instance Controller", typeof(InstanceController));
-            InstanceController.transform.SetParent(Operator.transform);
-
-            KeyController = new GameObject("Key Controller", typeof(KeyController));
-            KeyController.transform.SetParent(Operator.transform);
-
-            MouseController = new GameObject("Mouse Controller", typeof(MouseController));
-            MouseController.transform.SetParent(Operator.transform);
+            InstanceController = CreateController<InstanceController>("Instance Controller");
+            KeyController = CreateController<KeyController>("Key Controller");
+            MouseController = CreateController<MouseController>("Mouse Controller");
+            NetworkController = CreateController<Mirror.NetworkManager>("Network Controller");
 
             TempStorage = new GameObject("Temp Storage");
             TempStorage.transform.SetParent(Operator.transform);
@@ -133,6 +132,12 @@ namespace Game.Managers {
             GameObject prefab = AssetManager.Prefab(prefabID);
             GameObject instance = GameObject.Instantiate(prefab, parent);
             return instance;
+        }
+        internal static T CreateController<T>(string name) where T : Component {
+            GameObject controllerObject = new GameObject(name);
+            controllerObject.transform.SetParent(Operator.transform);
+            T controller = controllerObject.AddComponent<T>();
+            return controller;
         }
     }
 }

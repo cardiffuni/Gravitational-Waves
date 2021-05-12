@@ -222,5 +222,13 @@ MonoBehaviour:
     m_Localized: 'Strain vs Time '
     m_Metadata:
       m_Items: []
+  - m_Id: 31497685778845696
+    m_Localized: Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31498233525587968
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
   references:
     version: 1
