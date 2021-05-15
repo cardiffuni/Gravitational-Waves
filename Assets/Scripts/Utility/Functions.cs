@@ -147,5 +147,10 @@ namespace Game.Utility {
             //Debug.LogFormat("ReadJson: {0}", filename);
             return JsonConvert.DeserializeObject<T>(asset.text, SettingsManager.JsonSerializerSettings);
         }
+
+        public static T StringToJson<T>(string rawjson) {
+            //Debug.LogFormat("ReadJson: {0}", filename);
+            return JsonConvert.DeserializeObject<T>(rawjson, SettingsManager.JsonSerializerSettings);
+        }
     }
 }

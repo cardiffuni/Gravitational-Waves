@@ -740,10 +740,13 @@ namespace Mirror
                 logger.Log("NetworkManager created singleton (ForScene)");
                 singleton = this;
             }
-
+            
             // set active transport AFTER setting singleton.
             // so only if we didn't destroy ourselves.
             Transport.activeTransport = transport;
+
+            Debug.Log(transport);
+            Debug.Log(Transport.activeTransport);
 
             return true;
         }

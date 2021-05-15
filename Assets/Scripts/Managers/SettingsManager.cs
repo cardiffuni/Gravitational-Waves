@@ -49,9 +49,23 @@ namespace Game.Managers {
 
         public const string taskListRowPrefab = "UITaskListRow";
         public const int taskDefaultNumber = 10;
-        public const int teamsDefaultNumber = 2;
+        public const int taskMinNumber = 1;
+        public const int taskMaxNumber = 20;
+
+        public const int teamsDefaultNumber = 3;
+        public const int teamsMinNumber = 1;
+        public const int teamsMaxNumber = 10;
+
+        public const int timeMDefaultNumber = 20;
+        public const int timeMMinNumber = 5;
+        public const int timeMMaxNumber = 1440;
+
+        public const bool teamChatDefault = true;
+
+        public const int GenCodeLen = 6;
 
         public static bool Ready { get; private set; }
+        
 
         static SettingsManager() {
             Debug.Log("Loading SettingsManager");

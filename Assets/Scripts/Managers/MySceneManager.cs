@@ -25,6 +25,9 @@ namespace Game.Managers {
         public static string mainMenu = "MainMenu";
         private static event UnityAction OnExit;
 
+        public static UnityEvent onLoadOnce { get; private set; }
+
+
         public static bool Ready { get; private set; }
 
 
@@ -34,6 +37,7 @@ namespace Game.Managers {
             OverMenuScenes = new List<string>() { overlay, mainMenu };
             SceneManager.activeSceneChanged += OnSceneLoaded;
             Previous = new Stack<string>();
+            onLoadOnce = new UnityEvent();
             Ready = true;
         }
 
@@ -58,6 +62,8 @@ namespace Game.Managers {
 
         public static void OnSceneLoaded(Scene previousScene, Scene newScene) {
             InstanceManager.Init();
+            onLoadOnce?.Invoke();
+            onLoadOnce.RemoveAllListeners();
         }
 
         public static void LoadSceneAdditive(string name) {
@@ -119,6 +125,13 @@ namespace Game.Managers {
             Debug.Log("Application Quit");
             Application.Quit();
 #endif
+        }
+        public static void AddLoadOnceListener(UnityAction action) {
+            onLoadOnce.AddListener(action);
+        }
+
+        public static void RemoveLoadOnceListener(UnityAction action) {
+            onLoadOnce.RemoveListener(action);
         }
     }
 }

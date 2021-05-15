@@ -104,12 +104,13 @@ namespace Game.Managers {
 
         public static void LobbyConnect() {
             Debug.Log("Action: Connect To Lobby");
+            MySceneManager.AddLoadOnceListener(NetworkManager.StartClient);
             MySceneManager.LoadScene("GameLobby");
         }
 
         public static void LobbyHost() {
             Debug.Log("Action: Host Lobby");
-            NetworkManager.NetworkController.StartHost();
+            MySceneManager.AddLoadOnceListener(NetworkManager.StartHost);
             MySceneManager.LoadScene("GameLobby");
         }
 

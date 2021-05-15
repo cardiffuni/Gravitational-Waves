@@ -8,11 +8,13 @@ namespace Game.Teams {
         public string Name { get; protected set; }
         public string Id { get; protected set; }
 
+        public string GenCode { get; protected set; }
         public int Score { get; protected set; }
 
-        public Team(string id, string name) {
+        public Team(string id, string name, string genCode) {
             Name = name;
             Id = id;
+            GenCode = genCode;
             Score = 0;
         }
 

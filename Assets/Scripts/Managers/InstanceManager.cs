@@ -8,6 +8,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using Mirror;
+using Game.Network;
 
 namespace Game.Managers {
     public static class InstanceManager {
@@ -17,7 +18,7 @@ namespace Game.Managers {
         public static InstanceController InstanceController { get; private set; }
         public static KeyController KeyController { get; private set; }
         public static MouseController MouseController { get; private set; }
-        public static Mirror.NetworkManager NetworkController { get; private set; }
+        public static NetworkController NetworkController { get; private set; }
 
         public static GameObject TempStorage { get; private set; }
         public static GameObject CharactersContainer { get; private set; }
@@ -47,7 +48,7 @@ namespace Game.Managers {
             InstanceController = CreateController<InstanceController>("Instance Controller");
             KeyController = CreateController<KeyController>("Key Controller");
             MouseController = CreateController<MouseController>("Mouse Controller");
-            NetworkController = CreateController<Mirror.NetworkManager>("Network Controller");
+            NetworkController = CreateController<NetworkController>("Network Controller");
 
             TempStorage = new GameObject("Temp Storage");
             TempStorage.transform.SetParent(Operator.transform);

@@ -27,8 +27,8 @@ namespace Game.Core {
             InputManager.Load();
 
             ActionManager.Load();
-            PlayerManager.Load();
             TeamManager.Load();
+            PlayerManager.Load();
 
             NetworkManager.Load();
 
