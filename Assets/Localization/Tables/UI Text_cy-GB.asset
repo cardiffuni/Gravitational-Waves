@@ -174,5 +174,57 @@ MonoBehaviour:
     m_Localized: Parhewch
     m_Metadata:
       m_Items: []
+  - m_Id: 14848329826979840
+    m_Localized: Amser yn Weddill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14849448775012352
+    m_Localized: Eich Tasgau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14849969455910912
+    m_Localized: Cwblhau Tasg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14850337967460352
+    m_Localized: Cliciwch Fi!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14850532805464064
+    m_Localized: "Cyfanswm Mass (M\u2609)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851065549180928
+    m_Localized: Pellter (Mpc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851256142548992
+    m_Localized: "Straen [1\\\u221AHz]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851561886339072
+    m_Localized: Amlder [Hz]
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851764513165312
+    m_Localized: Straen vs Amlder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851879533563904
+    m_Localized: Cyflwyno Ffurflen Donfedd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853012083724288
+    m_Localized: Straen x10^21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853214450503680
+    m_Localized: Amser (au)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853562095390720
+    m_Localized: Straen vs Amser
+    m_Metadata:
+      m_Items: []
   references:
     version: 1

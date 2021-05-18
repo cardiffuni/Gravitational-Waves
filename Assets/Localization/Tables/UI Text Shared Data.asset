@@ -171,6 +171,58 @@ MonoBehaviour:
     m_Key: Continue
     m_Metadata:
       m_Items: []
+  - m_Id: 14848329826979840
+    m_Key: Time Remaining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14849448775012352
+    m_Key: Your Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14849969455910912
+    m_Key: Complete Task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14850337967460352
+    m_Key: Click Me!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14850532805464064
+    m_Key: "Total Mass (M\u2609)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851065549180928
+    m_Key: Distance (Mpc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851256142548992
+    m_Key: "Strain [1\\\u221AHz]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851561886339072
+    m_Key: New Entry 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851764513165312
+    m_Key: Strain vs Frequency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14851879533563904
+    m_Key: Submit Waveform
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853012083724288
+    m_Key: Strain x10^21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853214450503680
+    m_Key: Time (s)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14853562095390720
+    m_Key: 'Strain vs Time '
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

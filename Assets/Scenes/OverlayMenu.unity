@@ -1173,8 +1173,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Esc Menu
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 71a2d8fa480d94e429b391b2a305e408, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 366338034795a66419dc27cfefba3bc3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1198,17 +1198,17 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 214.45
+  m_fontSize: 249.8
   m_fontSizeBase: 400
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 300
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 20
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1650,8 +1650,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1785,8 +1785,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 71a2d8fa480d94e429b391b2a305e408, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 366338034795a66419dc27cfefba3bc3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1810,7 +1810,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 232.4
+  m_fontSize: 249.75
   m_fontSizeBase: 140
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1820,7 +1820,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 20
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 20
   m_lineSpacingMax: 0
@@ -2733,7 +2733,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Option A
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2762,7 +2762,7 @@ MonoBehaviour:
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -2797,7 +2797,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1350123243
@@ -2979,8 +2979,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Main Menu
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 71a2d8fa480d94e429b391b2a305e408, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 366338034795a66419dc27cfefba3bc3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3004,7 +3004,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 232.4
+  m_fontSize: 249.75
   m_fontSizeBase: 140
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3014,7 +3014,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 20
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 20
   m_lineSpacingMax: 0
@@ -3185,8 +3185,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Options
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 71a2d8fa480d94e429b391b2a305e408, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 366338034795a66419dc27cfefba3bc3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3210,7 +3210,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 232.4
+  m_fontSize: 249.75
   m_fontSizeBase: 140
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3220,7 +3220,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 20
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 20
   m_lineSpacingMax: 0
@@ -3821,8 +3821,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Continue
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 71a2d8fa480d94e429b391b2a305e408, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 366338034795a66419dc27cfefba3bc3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d80be752fac75d44591de5797c85cffd, type: 2}
+  m_sharedMaterial: {fileID: 614083157554701104, guid: d80be752fac75d44591de5797c85cffd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3846,7 +3846,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 232.4
+  m_fontSize: 249.75
   m_fontSizeBase: 140
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3856,7 +3856,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 20
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 20
   m_lineSpacingMax: 0
