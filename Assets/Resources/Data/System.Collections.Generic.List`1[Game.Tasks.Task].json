@@ -1,0 +1,80 @@
+[
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "MirrorCleaning",
+    "Name": "Mirror Cleaning",
+    "Title": "Mirror Cleaning",
+    "Description": "Clean those mirrors, fool!",
+    "Prefab": "Mirror Cleaning Task",
+    "Reward": "Reward1",
+    "Parent": null,
+    "Owner": null
+  },
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "WaveformFitter",
+    "Name": "Waveform Fitter",
+    "Title": "Waveform Fitter",
+    "Description": "Fit da Waveform",
+    "Prefab": "Waveform Fitter Task",
+    "Reward": "Reward2",
+    "Parent": null,
+    "Owner": null
+  },
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "Range",
+    "Name": "Range",
+    "Title": "Range",
+    "Description": "Get the waveform in the correct area?",
+    "Prefab": "Range Task",
+    "Reward": "Reward3",
+    "Parent": null,
+    "Owner": null
+  },
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "Laserpointer",
+    "Name": "Laser pointer",
+    "Title": "Laser pointer",
+    "Description": "Point da lazor to the right place!",
+    "Prefab": "Mirror Cleaning Task",
+    "Reward": "Reward2",
+    "Parent": null,
+    "Owner": null
+  },
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "EasterCrow",
+    "Name": "Easter Crow",
+    "Title": "Easter Crow",
+    "Description": "Chirp Chirp",
+    "Prefab": "Mirror Cleaning Task",
+    "Reward": "Reward3",
+    "Parent": null,
+    "Owner": null
+  },
+  {
+    "$type": "Game.Tasks.StandardTask, Assembly-CSharp",
+    "IsInProgress": false,
+    "IsCompleted": false,
+    "Id": "HelloWorld",
+    "Name": "Hello World",
+    "Title": "Hello World",
+    "Description": "Say Hi!",
+    "Prefab": "Mirror Cleaning Task",
+    "Reward": "Reward4",
+    "Parent": null,
+    "Owner": null
+  }
+]

@@ -6,6 +6,7 @@ using Game.Teams;
 using Game.Players;
 using Game.Tasks;
 using UnityEngine.Events;
+using Game.Network;
 
 namespace Game.Managers {
     public static class TeamManager {
@@ -40,9 +41,10 @@ namespace Game.Managers {
             TeamUpdated();
         }
 
-        internal static void CreateTeams(List<CodeJSON> data) {
+        internal static void CreateTeams(Dictionary<string,CodeJSON> data) {
             Teams.Clear();
-            foreach (CodeJSON team in data) {
+            foreach (KeyValuePair<string, CodeJSON> item in data) {
+                CodeJSON team = item.Value;
                 Teams.Add(new Team(string.Format("Team{0}", team.team), string.Format("Team {0}", team.team),team.gen_code));
             }
             TeamUpdated();

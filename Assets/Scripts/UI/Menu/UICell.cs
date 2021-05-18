@@ -11,7 +11,7 @@ public class UICell : MonoBehaviour {
     public GameObject PanelRight { get; private set; }
     public TextMeshProUGUI RightText { get; private set; }
 
-    public static bool Ready { get; private set; }
+    public bool Ready { get; private set; }
 
     private void OnEnable() {
         if (!Ready) {

@@ -26,6 +26,13 @@ namespace Game.Managers {
         };
         public const string JsonDefaultPath = "Assets/Resources/Data/";
 
+        internal const string secretKey = "poopoopoopoo"; // Edit this value and make sure it's the same as the one stored on the server
+        public const string codesURL = "https://gravwaves.azurewebsites.net/getcodes.php";
+        public const string ipURL = "https://gravwaves.azurewebsites.net/getip.php";
+        public const string dataURL = "https://gravwaves.azurewebsites.net/getdata.php";
+        public const string tasksURL = "https://gravwaves.azurewebsites.net/gettasks.php";
+        public const string wavesURL = "https://gravwaves.azurewebsites.net/getwaves.php";
+
         public const float H1SizeMin = 26;
         public const float H1SizeMax = 36;
         public const float H2SizeMin = 18;

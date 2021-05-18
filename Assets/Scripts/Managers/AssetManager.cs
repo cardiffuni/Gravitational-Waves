@@ -8,6 +8,7 @@ using UnityEngine;
 using Game.Extensions;
 using Newtonsoft.Json;
 using Game.Utility;
+using Game.Tasks;
 
 namespace Game.Managers {
     public static class AssetManager {
@@ -18,8 +19,8 @@ namespace Game.Managers {
         public static List<TextAsset> Texts { get; private set; }
         public static List<TextAsset> JSONs { get; private set; }
         public static List<GameObject> Prefabs { get; private set; }
-
-
+        public static List<Task> Tasks { get; private set; }
+        public static List<WaveData> Waves { get; private set; }
         public static bool Ready { get; private set; }
         static AssetManager() {
             Debug.Log("Loading AssetManager");
@@ -29,6 +30,8 @@ namespace Game.Managers {
             Texts = new List<TextAsset>();
             JSONs = new List<TextAsset>();
             Prefabs = new List<GameObject>();
+            Tasks = new List<Task>();
+            Waves = new List<WaveData>();
 
             InitTextures();
             InitAllSprites();
@@ -36,6 +39,8 @@ namespace Game.Managers {
             InitTextAssets();
             InitJSONAssets();
             InitPrefabAssets();
+            NetworkManager.GetFolderData<Task>(SettingsManager.tasksURL, InitTasks);
+            NetworkManager.GetFolderData<WaveData>(SettingsManager.wavesURL, InitWaves);
 
             Ready = true;
 
@@ -122,6 +127,26 @@ namespace Game.Managers {
             }
             Debug.LogFormat("Prefabs: {0}", log.Commaise());
         }
+        private static void InitTasks(Dictionary<string, Task> data) {
+            List<string> log = new List<string>();
+            foreach (KeyValuePair<string, Task> item in data) {
+                Task task = item.Value;
+                log.Add(task.Name);
+                Tasks.Add(task);
+            }
+            Debug.LogFormat("Tasks: {0}", log.Commaise());
+        }
+        private static void InitWaves(Dictionary<string, WaveData> data) {
+            List<string> log = new List<string>();
+            foreach (KeyValuePair<string, WaveData> item in data) {
+                WaveData wave = item.Value;
+                wave.SetName(item.Key);
+                wave.SetID(item.Key);
+                log.Add(wave.Name);
+                Waves.Add(wave);
+            }
+            Debug.LogFormat("Waves: {0}", log.Commaise());
+        }
 
         public static Texture2D Texture(string name) {
             if (!Textures.Any(x => x.name.ToLower() == name.ToLower())) {
@@ -172,6 +197,20 @@ namespace Game.Managers {
                 Debug.LogWarningFormat("No Prefab Named: {0}", name);
             }
             return Prefabs.DefaultIfEmpty(Prefabs[0]).FirstOrDefault(x => x.name.ToLower() == name.ToLower());
+        }
+
+        public static Task Task(string id) {
+            if (!Tasks.Any(x => x.ID.ToLower() == id.ToLower())) {
+                Debug.LogWarningFormat("No Task with ID: {0}", id);
+            }
+            return Tasks.DefaultIfEmpty(Tasks[0]).FirstOrDefault(x => x.ID.ToLower() == id.ToLower());
+        }
+
+        public static WaveData Wave(string id) {
+            if (!Waves.Any(x => x.ID.ToLower() == id.ToLower())) {
+                Debug.LogWarningFormat("No Wave with ID: {0}", id);
+            }
+            return Waves.DefaultIfEmpty(Waves[0]).FirstOrDefault(x => x.ID.ToLower() == id.ToLower());
         }
 
         public static string Assets() {

@@ -3058,12 +3058,12 @@ GameObject:
   - component: {fileID: 2103170630}
   - component: {fileID: 2103170629}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: NetworkRoomManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2103170629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3097,7 +3097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f06f08670038d79489ab525cdbd801b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
+  dontDestroyOnLoad: 0
   runInBackground: 1
   autoStartServerBuild: 1
   showDebugMessages: 0

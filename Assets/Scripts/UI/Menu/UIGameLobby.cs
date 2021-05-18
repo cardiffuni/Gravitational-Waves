@@ -13,7 +13,7 @@ public class UIGameLobby : MonoBehaviour {
 
     public GameObject LobbyContainer { get; private set; }
 
-    public static bool Ready { get; private set; }
+    public bool Ready { get; private set; }
 
 
     private void OnEnable() {
@@ -31,7 +31,7 @@ public class UIGameLobby : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        
+        UpdateTeams();
     }
 
     // Update is called once per frame

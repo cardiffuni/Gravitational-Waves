@@ -18,7 +18,7 @@ public class UIHostGameSettings : MonoBehaviour {
     public GameObject TimeLimitContainer { get; private set; }
     public TMP_InputField TimeLimitField { get; private set; }
 
-    public static bool Ready { get; private set; }
+    public bool Ready { get; private set; }
 
     private void OnEnable() {
         Debug.Log("UIHostGameSettings Enabled");

@@ -19,7 +19,7 @@ public class testing : MonoBehaviour
 
     public void runME() {
         Debug.LogFormat("testing {0}", "runME");
-        StartCoroutine (NetworkManager.GetCodes(3));
-        StartCoroutine(NetworkManager.GetIP("PQSTYD"));
+        //StartCoroutine (NetworkManager.GetCodes(3));
+        //StartCoroutine(NetworkManager.GetIP("PQSTYD"));
     }
 }

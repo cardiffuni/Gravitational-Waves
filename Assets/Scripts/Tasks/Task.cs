@@ -1,4 +1,5 @@
 using Game.Managers;
+using Game.Network;
 using Game.Players;
 using Game.Scores;
 using System;
@@ -8,11 +9,14 @@ using UnityEngine;
 
 namespace Game.Tasks {
     [Serializable]
-    public abstract class Task : ITask {
+    public abstract class Task : ITask, IServerData {
         public bool IsInProgress { get; protected set; }
         public bool IsCompleted { get; protected set; }
-        public string Id { get; protected set; }
-        public string Title { get; protected set; }
+        public string ID { get; protected set; }
+        
+        public string Name { get; protected set; }
+        public string Title { get => Name; }
+
         public string Description { get; protected set; }
         public string Prefab { get; protected set; }
         public string Reward { get; protected set; }
@@ -20,9 +24,9 @@ namespace Game.Tasks {
         public Player Owner { get; protected set; }
 
 
-        public Task(string id, string title, string description, string prefab, string reward) {
-            Id = id;
-            Title = title;
+        public Task(string id, string name, string description, string prefab, string reward) {
+            ID = id;
+            Name = name;
             Description = description;
             Prefab = prefab;
             Reward = reward;
@@ -31,8 +35,8 @@ namespace Game.Tasks {
 
         public Task(Task task) {
             Parent = task;
-            Id = task.Id;
-            Title = task.Title;
+            ID = task.ID;
+            Name = task.Name;
             Description = task.Description;
             Prefab = task.Prefab;
             Reward = task.Reward;
@@ -49,12 +53,12 @@ namespace Game.Tasks {
         public void Complete(bool value = true) {
             IsCompleted = value;
             if (IsCompleted) {
-                Debug.LogFormat("Task {0} Completed!", Title);
+                Debug.LogFormat("Task {0} Completed!", Name);
                 IsInProgress = false;
                 ScoreManager.AddScore(Owner, Reward);
                 TaskManager.TaskUpdated();
             } else {
-                Debug.LogFormat("Task {0} reset", Title);
+                Debug.LogFormat("Task {0} reset", Name);
             }
         }
 
@@ -64,18 +68,18 @@ namespace Game.Tasks {
 
         internal void Started(bool value = true) {
             if (value) {
-                Debug.LogFormat("Task {0} started!", Title);
+                Debug.LogFormat("Task {0} started!", Name);
             } else {
-                Debug.LogFormat("Task {0} no longer started", Title);
+                Debug.LogFormat("Task {0} no longer started", Name);
             }
             IsInProgress = value;
         }
 
-        public string GetID() => Id;
+        public string GetID() => ID;
 
         public string GetDescription() => Description;
 
-        public string GetTitle() => Title;
+        public string GetTitle() => Name;
 
         public void SetOwner(Player player) {
             Owner = player;

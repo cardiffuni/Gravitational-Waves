@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Linq;
 using Game.Teams;
+using Game.Utility;
 
 namespace Game.Managers {
     public static class TaskManager {
@@ -27,12 +28,13 @@ namespace Game.Managers {
                 new StandardTask("EasterCrow", "Easter Crow", "Chirp Chirp", "Mirror Cleaning Task", "Reward3"),
                 new StandardTask("HelloWorld", "Hello World", "Say Hi!", "Mirror Cleaning Task", "Reward4"),
             };
+            //Functions.ExportToJson(Tasks);
             onTaskUpdate = new UnityEvent();
             Ready = true;
         }
 
         internal static void TriggeredTask(Task task) {
-            Debug.LogFormat("Task {0} triggered", task.Title);
+            Debug.LogFormat("Task {0} triggered", task.Name);
             if (PlayerManager.LocalPlayer.AssignedTasks.Any(x => x.GetOrigin() == task && !x.IsCompleted)) {
                 Task playerTask = PlayerManager.LocalPlayer.AssignedTasks.First(x => x.GetOrigin() == task && !x.IsCompleted);
                 GameObject taskUI  = InstanceManager.DisplayFullscreen("Task UI Framework");

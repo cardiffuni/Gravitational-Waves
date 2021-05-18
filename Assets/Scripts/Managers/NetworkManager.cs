@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using System.Collections.Generic;
 using Game.Teams;
 using Game.Players;
 using Game.Tasks;
@@ -10,62 +9,103 @@ using Game.Network;
 using Game.Utility;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace Game.Managers {
-
-
-    internal class ServerJSON {
-        public string msg { get; set; }
-        public string result { get; set; }
-        public string error { get; set; }
-        public int timestamp { get; set; }
-        public List<CodeJSON> data { get; set; }
-        public string permitted_chars { get; set; }
-        public string hash { get; set; }
-    }
-    internal class CodeJSON {
-        public bool worked { get; set; }
-        public int trys { get; set; }
-        public string gen_code { get; set; }
-        public string host_ip { get; set; }
-        public int team { get; set; }
-    }
 
     public static class NetworkManager {
 
         public static NetworkController NetworkController { get => InstanceManager.NetworkController; }
 
         public static string ClientGenCode { get; private set; }
+        public static string ClientHostIP { get; private set; }
+        public static bool ClientConnected { get; private set; }
+        public static bool ClientConnecting { get; private set; }
+
+        public static UnityEvent OnClientConnecting { get; private set; }
+        public static UnityEvent OnClientConnect { get; private set; }
+        public static UnityEvent OnClientDisconnect { get; private set; }
+        public static UnityEvent OnClientError { get; private set; }
+
 
         public static bool Ready { get; private set; }
 
         static NetworkManager() {
             Debug.Log("Loading NetworkManager");
+            OnClientConnecting = new UnityEvent();
+            OnClientConnect = new UnityEvent();
+            OnClientDisconnect = new UnityEvent();
+            OnClientError = new UnityEvent();
+
             Ready = true;
         }
- 
-        private static string secretKey = "poopoopoopoo"; // Edit this value and make sure it's the same as the one stored on the server
-        public static string getCodesURL = "https://gravwaves.azurewebsites.net/getcodes.php"; //be sure to add a ? to your url
-        public static string getIPURL = "https://gravwaves.azurewebsites.net/getip.php";
+
+        private static string secretKey { get => SettingsManager.secretKey; } 
 
         public static void StartHost() {
             NetworkController.StartHost();
-            InstanceManager.InstanceController.StartCoroutine(GetCodes(TeamManager.NumTeams));
+            InstanceManager.InstanceController.StartCoroutine(CoGetCodes(TeamManager.NumTeams));
         }
 
         public static void StartClient() {
+            NetworkController.networkAddress = ClientHostIP;
+            //Uri uri = new Uri(ClientHostIP);
+            //Debug.LogFormat("Connecting to: {0}", uri);
+            //NetworkController.StartClient(uri);
+            ClientConnecting = true;
             NetworkController.StartClient();
-            InstanceManager.InstanceController.StartCoroutine(GetIP(ClientGenCode));
+            OnClientConnecting?.Invoke();
+
+            //InstanceManager.InstanceController.StartCoroutine(GetIP(ClientGenCode));
         }
 
-        internal static void SetClientGenCode(string inputFormatted) {
-            ClientGenCode = inputFormatted;
+        internal static void GetFolderData<T>(string url, Action<Dictionary<string, T>> callback) where T : IServerData {
+            InstanceManager.InstanceController.StartCoroutine(CoGetFolderData<T>(url, callback));
+            
+        }
+
+        public static void CheckAndGetIP(string genCode, Action<bool, string> callback) {
+            InstanceManager.InstanceController.StartCoroutine(CoGetIP(genCode, callback));
+    }
+
+        internal static void SetClientGenCode(string input) {
+            Debug.LogFormat("GenCode '{0}' set", input);
+            ClientGenCode = input;
+        }
+
+        internal static void SetClientHostIP(string input) {
+            Debug.LogFormat("IP '{0}' set", input);
+            ClientHostIP = input;
+        }
+
+        internal static void Connected(NetworkConnection conn) {
+            Debug.LogFormat("Connected");
+            ClientConnected = true;
+            OnClientConnect?.Invoke();
+            ActionManager.LoadSceneLobby();
+        }
+
+        internal static void Disconnected(NetworkConnection conn) {
+            Debug.LogFormat("Disconnected");
+            ClientConnected = false;
+            if (ClientConnecting) {
+                ClientConnecting = false;
+                OnClientDisconnect?.Invoke();
+            }
+        }
+
+        internal static void Error(NetworkConnection conn, int errorCode) {
+            Debug.LogFormat("Error");
+            ClientConnected = false;
+            if (ClientConnecting) {
+                ClientConnecting = false;
+                OnClientError?.Invoke();
+            }
         }
 
         // remember to use StartCoroutine when calling this function!
-        public static IEnumerator GetCodes(int teams) {
-
-
+        private static IEnumerator CoGetCodes(int teams) {
             //This connects to a server side php script that will add the name and score to a MySQL DB.
             // Supply it with a string representing the players name and the players score.
             string ip = null;
@@ -81,9 +121,9 @@ namespace Game.Managers {
                 form.AddField("teams", teams);
                 form.AddField("hash", hash);
 
-                yield return Networking.PostRequest(getCodesURL, form, webRequest => {
+                yield return Networking.PostRequest(SettingsManager.codesURL, form, webRequest => {
                     string text = webRequest.downloadHandler.text;
-                    ServerJSON json = Functions.StringToJson<ServerJSON>(text);
+                    ServerRequest<CodeJSON> json = Functions.StringToJson<ServerRequest<CodeJSON>>(text);
                     if(json != null && json.data != null && json.data.Count > 0) {
                         string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
                         Debug.LogFormat("Received: {0}",json);
@@ -104,7 +144,7 @@ namespace Game.Managers {
 
         // Get the scores from the MySQL DB to display in a GUIText.
         // remember to use StartCoroutine when calling this function!
-        public static IEnumerator GetIP(string genCode) {
+        private static IEnumerator CoGetIP(string genCode, Action<bool,string> callback) {
             string hash = Cryptography.Md5Sum(genCode + secretKey);
             Debug.LogFormat("sending hash: {0}", hash);
 
@@ -112,15 +152,52 @@ namespace Game.Managers {
             form.AddField("gen_code", genCode);
             form.AddField("hash", hash);
 
-            yield return Networking.PostRequest(getIPURL, form, webRequest => {
+            yield return Networking.PostRequest(SettingsManager.ipURL, form, webRequest => {
                 string text = webRequest.downloadHandler.text;
-                ServerJSON json = Functions.StringToJson<ServerJSON>(text);
-                if (json != null && json.data != null && json.data.Count > 0) {
+                ServerRequest<CodeJSON> json = Functions.StringToJson<ServerRequest<CodeJSON>>(text);
+                if (json != null && json.data != null) {
                     string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
                     if (checkhash == json.hash) {
-                        foreach (CodeJSON code in json.data) {
-                            Debug.Log(code.host_ip);
+                        if(json.data.Count > 0) {
+                            foreach (KeyValuePair<string, CodeJSON> item in json.data) {
+                                CodeJSON code = item.Value;
+                                Debug.LogFormat("Host IP for code {0} is {1}.", genCode, code.host_ip);
+                                callback(true, code.host_ip);
+                            }
+                        } else {
+                            callback(false, "Invalid Code");
                         }
+                        
+                    } else {
+                        Debug.LogErrorFormat("Received Hash {0} doesn't match calcalated hash {1} ", json.hash, checkhash);
+                        callback(false, "Communcation Error 04");
+                    }
+                } else {
+                    Debug.LogErrorFormat("Invalid reponce: {0}", text);
+                    callback(false, "Communcation Error 03");
+                }
+            });
+        }
+
+        private static IEnumerator CoGetFolderData<T>(string url, Action<Dictionary<string, T>> callback) where T : IServerData {
+
+            yield return Networking.GetRequest(url, webRequest => {
+                string text = webRequest.downloadHandler.text;
+                ServerRequest<T> json = Functions.StringToJson<ServerRequest<T>>(text);
+                if (json != null && json.data != null) {
+                    string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
+                    if (checkhash == json.hash) {
+                        if (json.data.Count > 0) {
+                            if (json.data != null) {
+                                callback(json.data);
+                            } else {
+                                Debug.LogErrorFormat("Empty data: {0}", json);
+                            }
+                            
+                        } else {
+                            Debug.LogErrorFormat("Empty JSON: {0}", json);
+                        }
+
                     } else {
                         Debug.LogErrorFormat("Received Hash {0} doesn't match calcalated hash {1} ", json.hash, checkhash);
                     }
@@ -130,6 +207,6 @@ namespace Game.Managers {
             });
         }
 
-    public static void Load() { }
+        public static void Load() { }
     }
 }

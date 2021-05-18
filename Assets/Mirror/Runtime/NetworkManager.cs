@@ -745,9 +745,6 @@ namespace Mirror
             // so only if we didn't destroy ourselves.
             Transport.activeTransport = transport;
 
-            Debug.Log(transport);
-            Debug.Log(Transport.activeTransport);
-
             return true;
         }
 
