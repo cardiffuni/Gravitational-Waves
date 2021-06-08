@@ -13,59 +13,54 @@ using Game.Network;
 namespace Game.Managers {
     public static class InstanceManager {
 
-        public static GameObject Operator { get; private set; }
+        public static Operator Operator { get; private set; }
 
         public static InstanceController InstanceController { get; private set; }
         public static KeyController KeyController { get; private set; }
         public static MouseController MouseController { get; private set; }
-        public static NetworkController NetworkController { get; private set; }
+        public static NetworkingController NetworkingController { get; private set; }
+        public static NetworkDataController NetworkDataController { get; private set; }
 
         public static GameObject TempStorage { get; private set; }
         public static GameObject CharactersContainer { get; private set; }
         public static GameObject ObjectInstancesContainer { get; private set; }
-        public static Canvas Canvas { get; private set; }
-        public static GameObject FullScreen { get; private set; }
-        public static GameObject WindowsSection { get; private set; }
-
+        public static Canvas Canvas { get; set; }
+        public static GameObject FullScreen { get; set; }
+        public static GameObject WindowsSection { get; set; }
+        
         public static List<GameObject> GameObjects { get; private set; }
 
         public static bool Ready { get; private set; }
 
         static InstanceManager() {
             Init();
+
+            InstanceController = CreateController<InstanceController>("Instance Controller", true);
+            KeyController = CreateController<KeyController>("Key Controller", true);
+            MouseController = CreateController<MouseController>("Mouse Controller", true);
+            NetworkingController = CreateController<NetworkingController>("Network Controller", true);
+
             Debug.Log("Loading InstanceManager");
+
+            Ready = true;
         }
 
         public static void Load() { }
 
-        public static void Init(GameObject parent = null) {
-            if (parent == null) {
-                Operator = new GameObject("Operator", typeof(Operator));
-            } else {
-                Operator = parent;
-            }
-
-            InstanceController = CreateController<InstanceController>("Instance Controller");
-            KeyController = CreateController<KeyController>("Key Controller");
-            MouseController = CreateController<MouseController>("Mouse Controller");
-            NetworkController = CreateController<NetworkController>("Network Controller");
+        public static void Init() {
+            Operator = CreateController<Operator>("Operator");
 
             TempStorage = new GameObject("Temp Storage");
             TempStorage.transform.SetParent(Operator.transform);
 
-            Canvas = UnityEngine.Object.FindObjectOfType<Canvas>();
-            Debug.Log(Canvas);
             CameraManager.Reset();
-            InitGameObjects();
-            if (Canvas.transform.Find("Player UI")) {
-                FullScreen = Canvas.transform.Find("Player UI").Find("Fullscreen").gameObject;
-                WindowsSection = Canvas.transform.Find("Player UI").Find("View Area").Find("Middle Section").Find("Windows Section").gameObject;
-            } else {
-                FullScreen = null;
-                WindowsSection = null;
-            }
+            
+        }
 
-            Ready = true;
+        public static void StartNetworkDataController() {
+            GameObject prefab = AssetManager.Prefab("Network Data Controller");
+            GameObject instance = UnityEngine.Object.Instantiate(prefab);
+            NetworkServer.Spawn(instance);
         }
 
         public static void SetupCharacters() {
@@ -109,6 +104,7 @@ namespace Game.Managers {
         }
 
         public static GameObject DisplayFullscreen(string name) {
+            Debug.LogFormat("FullScreen: {0}", FullScreen);
             if (FullScreen) {
                 return Instantiate(name, FullScreen);
             } else {
@@ -131,12 +127,16 @@ namespace Game.Managers {
 
         internal static GameObject Instantiate(string prefabID, Transform parent) {
             GameObject prefab = AssetManager.Prefab(prefabID);
-            GameObject instance = GameObject.Instantiate(prefab, parent);
+            GameObject instance = UnityEngine.Object.Instantiate(prefab, parent);
             return instance;
         }
-        internal static T CreateController<T>(string name) where T : Component {
+
+        internal static T CreateController<T>(string name, bool dontDestroy = false) where T : Component {
             GameObject controllerObject = new GameObject(name);
-            controllerObject.transform.SetParent(Operator.transform);
+            //controllerObject.transform.SetParent(Operator.transform);
+            if (dontDestroy) {
+                UnityEngine.Object.DontDestroyOnLoad(controllerObject);
+            }
             T controller = controllerObject.AddComponent<T>();
             return controller;
         }

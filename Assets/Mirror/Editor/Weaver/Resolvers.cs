@@ -5,6 +5,7 @@
 //       (original FieldType.Resolve returns null if not found too, so
 //        exceptions would be a bit inconsistent here)
 using Mono.CecilX;
+using System.Diagnostics;
 
 namespace Mirror.Weaver
 {
@@ -61,6 +62,7 @@ namespace Mirror.Weaver
         {
             foreach (MethodDefinition methodRef in variable.Resolve().Methods)
             {
+                //Weaver.Error(methodRef.Name);
                 if (methodRef.Name == ".ctor" &&
                     methodRef.Resolve().IsPublic &&
                     methodRef.Parameters.Count == 0)

@@ -20,15 +20,6 @@ namespace Mirror.Examples.Additive
         {
             base.OnStartServer();
 
-           
-        }
-
-        public override void Start() {
-            base.Start();
-            if (!isNetworkActive) {
-                StartHost();
-            }
-
             if (autoCreatePlayer) {
                 ClientScene.AddPlayer(NetworkClient.connection);
             }
@@ -38,6 +29,7 @@ namespace Mirror.Examples.Additive
 
             // Instantiate Zone Handler on server only
             Instantiate(Zone);
+
         }
 
         IEnumerator LoadSubScenes()

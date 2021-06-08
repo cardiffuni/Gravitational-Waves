@@ -101,7 +101,7 @@ namespace Game.Managers {
 
         public static void LoadSceneGameView() {
             Debug.Log("Action: Game View");
-            MySceneManager.LoadScene("GameView");
+            NetworkingManager.LoadGame();            
         }
 
         public static void LoadSceneLobby() {
@@ -112,13 +112,12 @@ namespace Game.Managers {
         public static void LobbyConnect() {
             Debug.Log("Action: Connect To Lobby");
             //MySceneManager.AddLoadOnceListener(NetworkManager.StartClient);
-            NetworkManager.StartClient();
+            NetworkingManager.StartClient();
         }
 
         public static void LobbyHost() {
             Debug.Log("Action: Host Lobby");
-            MySceneManager.AddLoadOnceListener(NetworkManager.StartHost);
-            LoadSceneLobby();
+            NetworkingManager.StartServer();
         }
 
         public static void InteractionWithObject() {

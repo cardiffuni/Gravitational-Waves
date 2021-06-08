@@ -11,7 +11,7 @@ using Mirror;
 [RequireComponent(typeof(NetworkIdentity))]
 public class NetworkProximityFinder : NetworkBehaviour {
 
-    public NetworkConnectionToClient LocalClientConn { get => NetworkServer.localConnection; }
+    public NetworkConnection LocalClientConn { get => NetworkClient.connection; }
     public Transform LocalClientTransform { get => LocalClientConn.identity.transform; }
 
 

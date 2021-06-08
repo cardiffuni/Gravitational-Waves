@@ -7,6 +7,7 @@ using Game.Players;
 using Game.Tasks;
 using Game.Scores;
 using System.Linq;
+using Game.Network;
 
 namespace Game.Managers {
     public static class ScoreManager {
@@ -33,8 +34,16 @@ namespace Game.Managers {
 
             Reward reward = Reward(rewardID);
 
+            Player oldItemPlayer = owner;
+            Team oldItemTeam = owner.Team;
+            int ownerInt = PlayerManager.Players.IndexOf(owner);
+            int ownerTeamInt = TeamManager.Teams.IndexOf(owner.Team);
+
             owner.AddScore(reward.PlayerAmount);
             owner.Team.AddScore(reward.TeamAmount);
+            
+            PlayerManager.Players.AddOperation(SyncClassList<Player>.Operation.OP_SET, ownerInt, default, owner);
+            TeamManager.Teams.AddOperation(SyncClassList<Team>.Operation.OP_SET, ownerTeamInt, default, owner.Team);
         }
 
         public static Reward Reward(string id) {

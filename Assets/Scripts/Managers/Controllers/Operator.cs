@@ -1,13 +1,12 @@
 ﻿using Game.Managers;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Managers.Controllers {
-    public class Operator : MonoBehaviour {
-        private GameObject InstanceController { get; set; }
-        private GameObject KeyController { get; set; }
+    public class Operator : MonoBehaviour { 
         public static bool Ready { get; private set; }
 
         // called zero
@@ -17,7 +16,7 @@ namespace Game.Managers.Controllers {
 
         // called first
         void OnEnable() {
-            Debug.Log("OnEnable called");
+            //Debug.Log("OnEnable called");
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 

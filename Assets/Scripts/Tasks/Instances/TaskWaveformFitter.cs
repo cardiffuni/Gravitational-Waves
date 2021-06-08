@@ -126,6 +126,7 @@ namespace Game.Tasks {
         }
 
         public void UpdateLineOnGraph(WaveData wave, string name) {
+            Debug.LogFormat("UpdateLineOnGraph wave: {0}", name);
             Serie line;
             if (LineChart.series.Contains(name)) {
                 line = LineChart.series.GetSerie(name);

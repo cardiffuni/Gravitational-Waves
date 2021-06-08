@@ -21,6 +21,7 @@ public class UIConnectGame : MonoBehaviour {
     public GameObject NavigationContainer { get; private set; }
 
     public Button StartBtn { get; private set; }
+    public Button BackBtn { get; private set; }
 
     public bool Ready { get; private set; }
 
@@ -32,8 +33,8 @@ public class UIConnectGame : MonoBehaviour {
             JoinCodeContainer = MenuContainer.transform.Find("Join Code Container").gameObject;
             JoinCodeField = JoinCodeContainer.GetComponentInChildren<TMP_InputField>();
 
-            if (NetworkManager.ClientGenCode != null) {
-                JoinCodeField.text = NetworkManager.ClientGenCode;
+            if (NetworkingManager.ClientGenCode != null) {
+                JoinCodeField.text = NetworkingManager.ClientGenCode;
             }
 
             InfoMessageContainer = MenuContainer.transform.Find("Info Message").gameObject;
@@ -41,13 +42,14 @@ public class UIConnectGame : MonoBehaviour {
 
             NavigationContainer = transform.Find("Navigation").gameObject;
             StartBtn = NavigationContainer.transform.Find("Start Button").GetComponent<Button>();
+            BackBtn = NavigationContainer.transform.Find("Back Button").GetComponent<Button>();
 
-            
 
             JoinCodeField.onEndEdit.AddListener(UpdateJoinCode);
-            NetworkManager.OnClientConnecting.AddListener(Connecting);
-            NetworkManager.OnClientDisconnect.AddListener(CantConnect);
-            NetworkManager.OnClientError.AddListener(ErrorConnect);
+            NetworkingManager.OnClientConnecting.AddListener(Connecting);
+            NetworkingManager.OnClientDisconnect.AddListener(CantConnect);
+            NetworkingManager.OnClientError.AddListener(ErrorConnect);
+            NetworkingManager.OnClientConnect.AddListener(Connected);
             Ready = true;
         }
     }
@@ -65,9 +67,10 @@ public class UIConnectGame : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        NetworkManager.OnClientConnecting.RemoveListener(Connecting);
-        NetworkManager.OnClientDisconnect.RemoveListener(CantConnect);
-        NetworkManager.OnClientError.RemoveListener(ErrorConnect);
+        NetworkingManager.OnClientConnecting.RemoveListener(Connecting);
+        NetworkingManager.OnClientDisconnect.RemoveListener(CantConnect);
+        NetworkingManager.OnClientError.RemoveListener(ErrorConnect);
+        NetworkingManager.OnClientConnect.RemoveListener(Connected);
     }
     
 
@@ -79,8 +82,8 @@ public class UIConnectGame : MonoBehaviour {
         JoinCodeField.text = code;
 
         if (code.Length == SettingsManager.GenCodeLen) {
-            NetworkManager.SetClientGenCode(code);
-            NetworkManager.CheckAndGetIP(code, VerifyJoinCode);
+            NetworkingManager.SetClientGenCode(code);
+            NetworkingManager.CheckAndGetIP(code, VerifyJoinCode);
             
         } else {
             StartBtn.interactable = false;
@@ -91,7 +94,7 @@ public class UIConnectGame : MonoBehaviour {
     private void VerifyJoinCode(bool success, string input) {
         if (success) {
             if (input != null && input.Length >= 7) {
-                NetworkManager.SetClientHostIP(input);
+                NetworkingManager.SetClientHostIP(input);
                 ValidCode();
                 StartBtn.interactable = true;
             } else {
@@ -109,55 +112,76 @@ public class UIConnectGame : MonoBehaviour {
 
     private void CodeFormat() {
         string info = string.Format("The code needs to be 6 Letters A-Z");
-        Debug.LogFormat(info);
-        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 1f, 0f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = info;
+        WarnMsg(info);
     }
 
     private void ValidCode() {
         string info = string.Format("Valid Code");
-        Debug.LogFormat(info);
-        InfoMessageContainer.GetComponent<Image>().color = new Color(0f, 1f, 0f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = info;
+        GoodMsg(info);
     }
 
     private void InvalidCode() {
         string info = string.Format("Invalid Code");
-        Debug.LogFormat(info);
-        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = info;
+        InfoMsg(info);
     }
 
     private void Connecting() {
         string info = string.Format("Connecting to Host...");
-        Debug.LogFormat(info);
-        StartBtn.interactable = false;
-        JoinCodeField.interactable = false;
-        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = info;
+        InfoMsg(info);
+        DisableInteractables();
+    }
+    private void Connected() {
+        string info = string.Format("Connected, loading...");
+        GoodMsg(info);
+        StartCoroutine(NetworkingManager.LoadLobby());
     }
 
     private void CantConnect() {
         string error = string.Format("Cannot Connect to Host");
-        Debug.LogFormat(error);
-        StartBtn.interactable = true;
-        JoinCodeField.interactable = true;
-        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = error;
+        ErrorMsg(error);
+        EnableInteractables();
     }
 
     private void ErrorConnect() {
         string error = string.Format("Error Connecting to Host");
-        Debug.LogFormat(error);
-        StartBtn.interactable = true;
-        JoinCodeField.interactable = true;
-        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.3921569f);
-        InfoMessageContainer.SetActive(true);
-        InfoMessageText.text = error;
+        ErrorMsg(error);
+        EnableInteractables();
     }
+
+    private void ErrorMsg(string msg) {
+        Debug.LogFormat(msg);
+        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 0f, 0f, 0.3921569f);
+        InfoMessageText.text = msg;
+    }
+
+    private void WarnMsg(string msg) {
+        Debug.LogFormat(msg);
+        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 1f, 0f, 0.3921569f);
+        InfoMessageText.text = msg;
+    }
+    private void InfoMsg(string msg) {
+        Debug.LogFormat(msg);
+        InfoMessageContainer.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.3921569f);
+        InfoMessageText.text = msg;
+    }
+
+    private void GoodMsg(string msg) {
+        InfoMessageContainer.SetActive(true);
+        Debug.LogFormat(msg);
+        InfoMessageContainer.GetComponent<Image>().color = new Color(0f, 1f, 0f, 0.3921569f);
+        InfoMessageText.text = msg;
+    }
+
+    private void EnableInteractables() {
+        StartBtn.interactable = true;
+        BackBtn.interactable = true;
+        JoinCodeField.interactable = true;
+    }
+
+    private void DisableInteractables() {
+        StartBtn.interactable = true;
+        BackBtn.interactable = true;
+        JoinCodeField.interactable = true;
+    }
+
 }

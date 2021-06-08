@@ -1,6 +1,8 @@
 using UnityEngine;
 using Mirror;
-
+using Game.Players;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Game.Managers.Controllers
 {
@@ -14,6 +16,15 @@ namespace Game.Managers.Controllers
 
         public Camera PlayerCamera { get; private set; }
 
+        [SyncVar(hook = nameof(UpdateID))]
+        public int PlayerID = -1;
+        public Player Player;
+
+        public void SetPlayer(Player player) {
+            Player = player;
+            PlayerID = player.ID;
+        }
+
         void OnValidate()
         {
             if (characterController == null)
@@ -23,15 +34,27 @@ namespace Game.Managers.Controllers
         void Start()
         {
             characterController.enabled = isLocalPlayer;
+            
         }
 
         public override void OnStartLocalPlayer() {
+            Debug.LogFormat("OnStartLocalPlayer");
             PlayerCamera = transform.Find("Player Camera").GetComponent<Camera>();
-            CameraManager.Select(PlayerCamera);
+            if (isClient) {
+                CameraManager.Select(PlayerCamera);
+            }
+        }
+
+        private void UpdateID(int _, int playerID) {
+            Debug.LogFormat("PlayerID: {0}", playerID);
+            PlayerID = playerID;
         }
 
         void OnDisable() {
-            CameraManager.Overview();
+            if (isClient) {
+                CameraManager.Overview();
+            }
+            
         }
 
         [Header("Movement Settings")]

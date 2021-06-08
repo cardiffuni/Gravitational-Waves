@@ -174,7 +174,7 @@ namespace Mirror
         [NonSerialized]
         public bool isNetworkActive;
 
-        static NetworkConnection clientReadyConnection;
+        protected static NetworkConnection clientReadyConnection;
 
         /// <summary>
         /// This is true if the client loaded a new scene when connecting to the server.
@@ -748,7 +748,7 @@ namespace Mirror
             return true;
         }
 
-        void RegisterServerMessages()
+        protected virtual void RegisterServerMessages()
         {
             NetworkServer.RegisterHandler<ConnectMessage>(OnServerConnectInternal, false);
             NetworkServer.RegisterHandler<DisconnectMessage>(OnServerDisconnectInternal, false);
@@ -759,7 +759,7 @@ namespace Mirror
             NetworkServer.ReplaceHandler<ReadyMessage>(OnServerReadyMessageInternal);
         }
 
-        void RegisterClientMessages()
+        protected virtual void RegisterClientMessages()
         {
             NetworkClient.RegisterHandler<ConnectMessage>(OnClientConnectInternal, false);
             NetworkClient.RegisterHandler<DisconnectMessage>(OnClientDisconnectInternal, false);
@@ -862,10 +862,11 @@ namespace Mirror
         // This is only set in ClientChangeScene below...never on server.
         // We need to check this in OnClientSceneChanged called from FinishLoadSceneClientOnly
         // to prevent AddPlayer message after loading/unloading additive scenes
-        SceneOperation clientSceneOperation = SceneOperation.Normal;
+        protected SceneOperation clientSceneOperation = SceneOperation.Normal;
 
         internal void ClientChangeScene(string newSceneName, SceneOperation sceneOperation = SceneOperation.Normal, bool customHandling = false)
         {
+            Debug.LogFormat("ClientChangeScene: {0}, {1}", newSceneName, sceneOperation);
             if (string.IsNullOrEmpty(newSceneName))
             {
                 logger.LogError("ClientChangeScene empty scene name");
@@ -1198,24 +1199,6 @@ namespace Mirror
         void OnServerAddPlayerInternal(NetworkConnection conn, AddPlayerMessage msg)
         {
             logger.Log("NetworkManager.OnServerAddPlayer");
-
-            if (autoCreatePlayer && playerPrefab == null)
-            {
-                logger.LogError("The PlayerPrefab is empty on the NetworkManager. Please setup a PlayerPrefab object.");
-                return;
-            }
-
-            if (autoCreatePlayer && playerPrefab.GetComponent<NetworkIdentity>() == null)
-            {
-                logger.LogError("The PlayerPrefab does not have a NetworkIdentity. Please add a NetworkIdentity to the player prefab.");
-                return;
-            }
-
-            if (conn.identity != null)
-            {
-                logger.LogError("There is already a player for this connection.");
-                return;
-            }
 
             OnServerAddPlayer(conn);
         }

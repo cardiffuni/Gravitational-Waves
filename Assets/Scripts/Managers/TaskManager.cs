@@ -35,11 +35,14 @@ namespace Game.Managers {
 
         internal static void TriggeredTask(Task task) {
             Debug.LogFormat("Task {0} triggered", task.Name);
-            if (PlayerManager.LocalPlayer.AssignedTasks.Any(x => x.GetOrigin() == task && !x.IsCompleted)) {
-                Task playerTask = PlayerManager.LocalPlayer.AssignedTasks.First(x => x.GetOrigin() == task && !x.IsCompleted);
+            if (PlayerManager.LocalPlayer.AssignedTasks.Any(x => x.ID == task.ID && !x.IsCompleted)) {
+                Debug.LogFormat("Task {0} assigned", task.Name);
+                Task playerTask = PlayerManager.LocalPlayer.AssignedTasks.First(x => x.ID == task.ID && !x.IsCompleted);
                 GameObject taskUI  = InstanceManager.DisplayFullscreen("Task UI Framework");
                 TaskWindow taskPrefab = taskUI.GetComponent<TaskWindow>();
                 taskPrefab.SetTask(playerTask);
+            } else {
+                Debug.LogFormat("Task {0} not assigned", task.Name);
             }
         }
 

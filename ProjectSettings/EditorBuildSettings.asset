@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menus/MainMenu.unity
     guid: c5d207e6474914b4988639513fbe8128
   - enabled: 1
-    path: Assets/Scenes/GameView/GameView.unity
+    path: Assets/Scenes/Game/PlayerView.unity
     guid: f701c359e7056fb46bfac0fbefb286e5
   - enabled: 1
     path: Assets/Scenes/Locations/LIGOMainBuilding.unity
@@ -32,6 +32,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menus/GameLobby.unity
     guid: 6f25a81fff60e5947ac989ab2a9aae2a
+  - enabled: 1
+    path: Assets/Scenes/Game/NetworkLayer.unity
+    guid: 2b849423b9fea41408b52dc31c6d6436
+  - enabled: 1
+    path: Assets/Scenes/Game/ServerView.unity
+    guid: ade94fbdb13cdb84aaebeb913b3883cc
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 9cf0aa148b734d04185a2f61a8a63d70, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 6f74ee49a07591d4c9d8158ca174e453, type: 2}

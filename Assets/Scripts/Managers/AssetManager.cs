@@ -39,8 +39,8 @@ namespace Game.Managers {
             InitTextAssets();
             InitJSONAssets();
             InitPrefabAssets();
-            NetworkManager.GetFolderData<Task>(SettingsManager.tasksURL, InitTasks);
-            NetworkManager.GetFolderData<WaveData>(SettingsManager.wavesURL, InitWaves);
+            NetworkingManager.GetFolderData<Task>(SettingsManager.tasksURL, InitTasks);
+            NetworkingManager.GetFolderData<WaveData>(SettingsManager.wavesURL, InitWaves);
 
             Ready = true;
 

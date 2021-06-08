@@ -23,6 +23,17 @@ namespace Game.Tasks {
         public Task Parent { get; protected set; }
         public Player Owner { get; protected set; }
 
+        public Task(bool IsInProgress, bool IsCompleted, string ID, string Name, string Description, string Prefab, string Reward) {
+            this.IsInProgress = IsInProgress;
+            this.IsCompleted = IsCompleted;
+            this.ID = ID;
+            this.Name = Name;
+            this.Description = Description;
+            this.Prefab = Prefab;
+            this.Reward = Reward;
+            this.Parent = TaskManager.Task(ID);
+        }
+        
 
         public Task(string id, string name, string description, string prefab, string reward) {
             ID = id;

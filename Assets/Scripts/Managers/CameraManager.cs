@@ -35,7 +35,7 @@ namespace Game.Managers {
         }
 
         public static void Select(Camera selection) {
-            if (Current != selection) {
+            if (Current != null && Current != selection) {
                 //Current.gameObject.SetActive(false);
                 Current.enabled = false;
                 Current = selection;

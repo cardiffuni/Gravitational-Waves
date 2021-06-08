@@ -16,7 +16,7 @@ namespace Game.UI.InGame.Sections {
         public TextMeshProUGUI Name { get; private set; }
         public GameObject DetailsPanel { get; private set; }
         public TextMeshProUGUI Details { get; private set; }
-
+        public bool FirstLoadDone { get; protected set; }
         public bool Ready { get; protected set; }
 
         // Use this for initialization
@@ -43,7 +43,9 @@ namespace Game.UI.InGame.Sections {
 
         // Update is called once per frame
         void Update() {
-
+            if (!FirstLoadDone) {
+                UpdateCurrentPlayer();
+            }
         }
 
         public void SetPortrait(string spriteID) {
@@ -71,6 +73,7 @@ namespace Game.UI.InGame.Sections {
                 SetPortrait(player.Thumbnail);
                 SetName(player.Name);
                 SetDesc(string.Format(player.GetDescription()));
+                FirstLoadDone = true;
             } 
         }
     }

@@ -11,6 +11,7 @@ public class UIProgressBar : MonoBehaviour
     public float IntitalValue = 0f;
     public float FillingSpeed = 0.5f;
     private float targetProgress = 0f;
+    public static bool FirstLoadDone { get; private set; }
     public static bool Ready { get; private set; }
 
     
@@ -21,8 +22,7 @@ public class UIProgressBar : MonoBehaviour
 
     }
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         if (!Ready) {
             TaskManager.AddTaskUpdateListener(UpdateTargetProgress);
             UpdateTargetProgress();
@@ -30,8 +30,10 @@ public class UIProgressBar : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        if (!FirstLoadDone) {
+            UpdateTargetProgress();
+        }
         if (slider.value < targetProgress) {
             slider.value += FillingSpeed * Time.deltaTime;
         } else if (slider.value > targetProgress) {
@@ -46,7 +48,10 @@ public class UIProgressBar : MonoBehaviour
     }
 
     private void UpdateTargetProgress() {
-        float value = PlayerManager.LocalPlayer.PercentageTasksComplete();
-        targetProgress = value;
+        if(PlayerManager.LocalPlayer != null) {
+            float value = PlayerManager.LocalPlayer.PercentageTasksComplete();
+            targetProgress = value;
+            FirstLoadDone = true;
+        }
     }
 }

@@ -8,12 +8,14 @@ using Game.Managers;
 using System.Linq;
 using Mirror;
 using Game.Teams;
+using Newtonsoft.Json;
 
 namespace Game.Players {
     public class Player {
         public string Name { get; protected set; }
         public bool IsHost { get; protected set; }
-        public NetworkConnectionToClient Conn { get; protected set; }
+        public int ID { get; protected set; }
+        public int ConnId { get; protected set; }
 
         public List<Task> AssignedTasks { get; protected set; }
         public string Thumbnail { get; protected set; }
@@ -23,16 +25,44 @@ namespace Game.Players {
 
         public int Score { get; protected set; }
 
-        public Player(string name, Team team) {
+        public static int PlayerIndex = 0;
+
+        public Player() {
+            Name = "Default Player";
+            NumberOfTasks = SettingsManager.taskDefaultNumber;
+            Score = 0;
+        }
+
+        public Player(string name, Team team, int connId) {
             Name = name;
             Thumbnail = "gravitationalwaves-tex";
             AssignedTasks = new List<Task>();
             IsHost = false;
+            PlayerIndex++;
+            ID = PlayerIndex;
+            ConnId = connId;
 
             NumberOfTasks = SettingsManager.taskDefaultNumber;
             PlayerManager.AssignRandomTasks(this);
             Team = team;
             Score = 0;
+        }
+
+        [JsonConstructor]
+        public Player(string Name, bool IsHost, int ConnId, int ID, List<Task> AssignedTasks, string Thumbnail, int NumberOfTasks, Team Team, int Score) {
+            this.Name = Name;
+            this.Thumbnail = Thumbnail;
+            Debug.LogFormat("AssignedTasks.Count: {0}", AssignedTasks.Count);
+            this.AssignedTasks = AssignedTasks;
+            AssignedTasks.ForEach(x => x.SetOwner(this));
+            this.IsHost = IsHost;
+
+            this.ID = ID;
+            this.ConnId = ConnId;
+
+            this.NumberOfTasks = NumberOfTasks;
+            this.Team = Team;
+            this.Score = Score;
         }
 
         internal void AddScore(int value) {

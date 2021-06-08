@@ -7,13 +7,17 @@ using Game.Players;
 using Game.Tasks;
 using UnityEngine.Events;
 using Game.Network;
+using Mirror;
 
 namespace Game.Managers {
     public static class TeamManager {
-      
+
         public static UnityEvent onTeamUpdate { get; private set; }
 
-        public static List<Team> Teams { get; private set; }
+        public static SyncClassList<Team> Teams { get => NetworkingManager.NetworkDataController.Teams; set => NetworkingManager.NetworkDataController.Teams = value; }
+        private static Dictionary<string, CodeJSON> teamCodes;
+
+
         public static int NumTeams { get; private set; }
         public static int TimeLimit { get; private set; }
         public static bool TeamChat { get; private set; }
@@ -22,30 +26,21 @@ namespace Game.Managers {
 
         static TeamManager() {
             Debug.Log("Loading TeamManager");
-            Teams = new List<Team>();
+            
             onTeamUpdate = new UnityEvent();
             SetDefaults();
-            CreateTeams();
             Ready = true;
         }
 
         public static void Load() {
-            
+
         }
 
-        public static void CreateTeams() {
-            Teams.Clear();
-            for (int i = 0; i < NumTeams; i++) {
-                Teams.Add(new Team(string.Format("Team{0}", i + 1), string.Format("Team {0}", i + 1),"XXXXXX"));
-            }
-            TeamUpdated();
-        }
-
-        internal static void CreateTeams(Dictionary<string,CodeJSON> data) {
-            Teams.Clear();
-            foreach (KeyValuePair<string, CodeJSON> item in data) {
+        internal static void CreateTeams() {
+            Teams.Reset();
+            foreach (KeyValuePair<string, CodeJSON> item in teamCodes) {
                 CodeJSON team = item.Value;
-                Teams.Add(new Team(string.Format("Team{0}", team.team), string.Format("Team {0}", team.team),team.gen_code));
+                Teams.Add(new Team(string.Format("Team{0}", team.team), string.Format("Team {0}", team.team), team.gen_code));
             }
             TeamUpdated();
         }
@@ -67,7 +62,7 @@ namespace Game.Managers {
         }
 
         public static void SetTimeLimit(int val) {
-            TimeLimit = 60* val;
+            TimeLimit = 60 * val;
         }
 
         public static void SetTeamChat(bool val) {
@@ -78,6 +73,10 @@ namespace Game.Managers {
             SetTeamCount(SettingsManager.teamsDefaultNumber);
             SetTimeLimit(SettingsManager.timeMDefaultNumber);
             SetTeamChat(SettingsManager.teamChatDefault);
+        }
+
+        internal static void StoreTeamCodes(Dictionary<string, CodeJSON> data) {
+            teamCodes = data;
         }
     }
 }

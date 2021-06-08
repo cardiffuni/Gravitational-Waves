@@ -25,6 +25,8 @@ namespace Game.Managers {
         public static string mainMenu = "MainMenu";
         private static event UnityAction OnExit;
 
+        public static bool loadingSubscenes { get; private set; }
+
         public static UnityEvent onLoadOnce { get; private set; }
 
 
@@ -51,7 +53,7 @@ namespace Game.Managers {
                 Debug.LogFormat("Changing Scene from {0} to {1}", Current.name, name);
                 Previous.Push(Current.name);
                 AdditonalScenes.Clear();
-                SceneManager.LoadScene(name, LoadSceneMode.Single);
+                SceneManager.LoadSceneAsync(name, LoadSceneMode.Single);
                 AdditonalScenes = new List<string>();
             } else {
                 string error = name == null ? "Null String" : "Empty String";
@@ -79,6 +81,28 @@ namespace Game.Managers {
                 SceneManager.UnloadSceneAsync(name);
             }
 
+        }
+
+        public static IEnumerator LoadSubScenes(List<string> subScenes) {
+            Debug.LogFormat("Loading Scenes");
+            loadingSubscenes = true;
+            foreach (string sceneName in subScenes) {
+                yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                Debug.LogFormat("Loaded {0}", sceneName);
+            }
+            loadingSubscenes = false;
+        }
+
+        public static IEnumerator UnloadScenes(List<string> subScenes) {
+            Debug.LogFormat("Unloading Subscenes");
+
+            foreach (string sceneName in subScenes)
+                if (SceneManager.GetSceneByName(sceneName).IsValid() || SceneManager.GetSceneByPath(sceneName).IsValid()) {
+                    yield return SceneManager.UnloadSceneAsync(sceneName);
+                    Debug.LogFormat("Unloaded {0}", sceneName);
+                }
+
+            yield return Resources.UnloadUnusedAssets();
         }
 
         public static void AddOnGameExitCallback(UnityAction callback) {

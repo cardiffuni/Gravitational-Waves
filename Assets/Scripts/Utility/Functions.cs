@@ -143,12 +143,18 @@ namespace Game.Utility {
             writer.Close();
         }
 
+        public static string ObjectToStringJson(object obj) {
+            //Debug.LogFormat("ReadJson: {0}", filename);
+            return JsonConvert.SerializeObject(obj, SettingsManager.JsonSerializerFormatting, SettingsManager.JsonSerializerSettings);
+        }
+
         public static T ReadJson<T>(TextAsset asset) {
             //Debug.LogFormat("ReadJson: {0}", filename);
             return JsonConvert.DeserializeObject<T>(asset.text, SettingsManager.JsonSerializerSettings);
         }
 
-        public static T StringToJson<T>(string rawjson) {
+
+        public static T StringJsonToObject<T>(string rawjson) {
             //Debug.LogFormat("ReadJson: {0}", filename);
             return JsonConvert.DeserializeObject<T>(rawjson, SettingsManager.JsonSerializerSettings);
         }

@@ -16,6 +16,7 @@ namespace Game.UI.InGame.Sections {
         public GameObject DetailsPanel { get; private set; }
         public TextMeshProUGUI Details { get; private set; }
 
+        public bool FirstLoadDone { get; protected set; }
         public bool Ready { get; protected set; }
 
         // Use this for initialization
@@ -37,7 +38,9 @@ namespace Game.UI.InGame.Sections {
 
         // Update is called once per frame
         void Update() {
-
+            if (!FirstLoadDone) {
+                UpdateTeamDetails();
+            }
         }
 
         private void OnDestroy() {
@@ -56,10 +59,12 @@ namespace Game.UI.InGame.Sections {
         }
 
         public void UpdateTeamDetails() {
+            
             if (PlayerManager.LocalPlayer != null && PlayerManager.LocalPlayer.Team != null) {
                 Team team = PlayerManager.LocalPlayer.Team;
                 SetName(team.Name);
                 SetDesc(team.GetDescription());
+                FirstLoadDone = true;
             } 
         }
     }

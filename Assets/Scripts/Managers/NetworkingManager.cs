@@ -1,62 +1,92 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
-using Game.Teams;
-using Game.Players;
-using Game.Tasks;
-using Mirror;
+﻿using Game.Managers.Controllers;
 using Game.Network;
+using Game.Teams;
 using Game.Utility;
-using UnityEngine.Networking;
-using Newtonsoft.Json;
+using Mirror;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Game.Managers {
 
-    public static class NetworkManager {
+    public static class NetworkingManager {
 
-        public static NetworkController NetworkController { get => InstanceManager.NetworkController; }
+        public static NetworkingController NetworkingController { get => InstanceManager.NetworkingController; }
+        public static NetworkDataController NetworkDataController { get => NetworkDataController.Singleton; }
 
+        public static bool isClient => NetworkingController.isClient;
+        public static bool isServer => NetworkingController.isServer;
+        public static bool isServerOnly => NetworkingController.isServerOnly;
+        public static bool isHost => NetworkingController.isHost;
+
+        public static NetworkIdentity LocalPlayer => ClientScene.localPlayer;
+        public static NetworkConnection LocalConn => NetworkClient.connection;
+        
         public static string ClientGenCode { get; private set; }
         public static string ClientHostIP { get; private set; }
-        public static bool ClientConnected { get; private set; }
-        public static bool ClientConnecting { get; private set; }
+
+        public static bool isClientConnected { get; private set; }
+        public static bool isClientConnecting { get; private set; }
+
+        public static bool isServerStarted { get; private set; }
+        public static bool isServerStarting { get; private set; }
+
 
         public static UnityEvent OnClientConnecting { get; private set; }
         public static UnityEvent OnClientConnect { get; private set; }
         public static UnityEvent OnClientDisconnect { get; private set; }
         public static UnityEvent OnClientError { get; private set; }
 
+        public static UnityEvent OnServerStarting { get; private set; }
+        public static UnityEvent OnServerStarted { get; private set; }
+        public static UnityEvent OnServerStopped { get; private set; }
+
 
         public static bool Ready { get; private set; }
 
-        static NetworkManager() {
+        static NetworkingManager() {
             Debug.Log("Loading NetworkManager");
             OnClientConnecting = new UnityEvent();
             OnClientConnect = new UnityEvent();
             OnClientDisconnect = new UnityEvent();
             OnClientError = new UnityEvent();
 
+            OnServerStarting = new UnityEvent();
+            OnServerStarted = new UnityEvent();
+            OnServerStopped = new UnityEvent();
+
             Ready = true;
         }
 
         private static string secretKey { get => SettingsManager.secretKey; } 
 
-        public static void StartHost() {
-            NetworkController.StartHost();
-            InstanceManager.InstanceController.StartCoroutine(CoGetCodes(TeamManager.NumTeams));
+        public static void PreLoad() {
+            NetworkingController.playerPrefab = AssetManager.Prefab("Player Character");
+            RegisterPrefab("Network Data Controller");
+
+        }
+
+        public static void RegisterPrefab(string prefabID) {
+            GameObject prefab = AssetManager.Prefab(prefabID);
+            ClientScene.RegisterPrefab(prefab);
+        }
+
+        public static void StartServer() {
+            isServerStarting = true;
+            NetworkingController.StartServer();
+            OnServerStarting?.Invoke();
         }
 
         public static void StartClient() {
-            NetworkController.networkAddress = ClientHostIP;
+            NetworkingController.networkAddress = ClientHostIP;
             //Uri uri = new Uri(ClientHostIP);
             //Debug.LogFormat("Connecting to: {0}", uri);
             //NetworkController.StartClient(uri);
-            ClientConnecting = true;
-            NetworkController.StartClient();
+            isClientConnecting = true;
+            NetworkingController.StartClient();
             OnClientConnecting?.Invoke();
-
             //InstanceManager.InstanceController.StartCoroutine(GetIP(ClientGenCode));
         }
 
@@ -65,9 +95,31 @@ namespace Game.Managers {
             
         }
 
+        internal static void ClientsLoadScene(string scene) {
+            foreach (NetworkConnection conn in NetworkServer.connections.Values) {
+                conn.Send(new SceneMessage { sceneName = scene, sceneOperation = SceneOperation.Normal });
+            }
+            Debug.LogFormat("Team size: {0}", TeamManager.Teams.Count);
+            foreach (Team team in TeamManager.Teams) {
+                Debug.LogFormat("Team: Name {0}, Id {1}, Score {2}, GenCode {3}", team.Name, team.ID, team.Score, team.GenCode);
+            }
+            //Debug.LogFormat("Team2 size: {0}", TeamManager.Teams2.Count);
+            //foreach (Team team in TeamManager.Teams2) {
+            //    Debug.LogFormat("Team: Name {0}, Id {1}, Score {2}, GenCode {3}", team.Name, team.ID, team.Score, team.GenCode);
+            //}
+        }
+
         public static void CheckAndGetIP(string genCode, Action<bool, string> callback) {
             InstanceManager.InstanceController.StartCoroutine(CoGetIP(genCode, callback));
-    }
+        }
+
+        public static void GetTeamGenCodes(Action<bool, string> callback) {
+            InstanceManager.InstanceController.StartCoroutine(CoGetCodes(TeamManager.NumTeams, callback));
+        }
+
+        internal static void LoadGame() {
+            NetworkingController.ServerChangeScene("NetworkLayer");
+        }
 
         internal static void SetClientGenCode(string input) {
             Debug.LogFormat("GenCode '{0}' set", input);
@@ -79,33 +131,58 @@ namespace Game.Managers {
             ClientHostIP = input;
         }
 
+        internal static IEnumerator LoadLobby() {
+            while ( !isClientConnected && (NetworkDataController == null || !NetworkDataController.Ready)) { 
+                Debug.LogFormat("NetworkDataController == null {0}", NetworkDataController == null); 
+                 yield return null;
+            }
+            if (isServer) {
+                TeamManager.CreateTeams();
+            }
+            ActionManager.LoadSceneLobby();
+        }
+
         internal static void Connected(NetworkConnection conn) {
             Debug.LogFormat("Connected");
-            ClientConnected = true;
+            //InstanceManager.StartNetworkDataController();
+            isClientConnecting = false;
+            isClientConnected = true;
             OnClientConnect?.Invoke();
-            ActionManager.LoadSceneLobby();
+            
         }
 
         internal static void Disconnected(NetworkConnection conn) {
             Debug.LogFormat("Disconnected");
-            ClientConnected = false;
-            if (ClientConnecting) {
-                ClientConnecting = false;
-                OnClientDisconnect?.Invoke();
-            }
+            isClientConnected = false;
+            isClientConnecting = false;
+            OnClientDisconnect?.Invoke();
         }
 
         internal static void Error(NetworkConnection conn, int errorCode) {
             Debug.LogFormat("Error");
-            ClientConnected = false;
-            if (ClientConnecting) {
-                ClientConnecting = false;
-                OnClientError?.Invoke();
-            }
+            isClientConnected = false;
+            isClientConnecting = false;
+            OnClientError?.Invoke();
+        }
+
+        internal static void ServerStarted() {
+            Debug.LogFormat("Server Started");
+            InstanceManager.StartNetworkDataController();
+            Networking.UPnP();
+            isServerStarted = true;
+            isServerStarting = false;
+            OnServerStarted?.Invoke();
+        }
+
+        internal static void ServerStopped() {
+            Debug.LogFormat("Server Stopped");
+            isServerStarted = false;
+            isServerStarting = false;
+            OnServerStopped?.Invoke();
         }
 
         // remember to use StartCoroutine when calling this function!
-        private static IEnumerator CoGetCodes(int teams) {
+        private static IEnumerator CoGetCodes(int teams, Action<bool, string> callback) {
             //This connects to a server side php script that will add the name and score to a MySQL DB.
             // Supply it with a string representing the players name and the players score.
             string ip = null;
@@ -121,24 +198,28 @@ namespace Game.Managers {
                 form.AddField("teams", teams);
                 form.AddField("hash", hash);
 
-                yield return Networking.PostRequest(SettingsManager.codesURL, form, webRequest => {
+                yield return Networking.PostRequest(SettingsManager.codesURL, form, (Action<UnityEngine.Networking.UnityWebRequest>)(webRequest => {
                     string text = webRequest.downloadHandler.text;
-                    ServerRequest<CodeJSON> json = Functions.StringToJson<ServerRequest<CodeJSON>>(text);
+                    ServerRequest<CodeJSON> json = Functions.StringJsonToObject<ServerRequest<CodeJSON>>((string)text);
                     if(json != null && json.data != null && json.data.Count > 0) {
                         string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
-                        Debug.LogFormat("Received: {0}",json);
+                        Debug.LogFormat("Received: {0}", json);
                         if (checkhash == json.hash) {
-                            TeamManager.CreateTeams(json.data);
+                            TeamManager.StoreTeamCodes(json.data);
+                            callback(true, "Code retreived");
                         } else {
                             Debug.LogErrorFormat("Received Hash {0} doesn't match calcalated hash {1} ", json.hash, checkhash);
+                            callback(false, "Communcation Error 04");
                         }
                     } else {
                         Debug.LogErrorFormat("Invalid reponce: {0}", text);
+                        callback(false, "Communcation Error 03");
                     }
-                });
+                }));
 
             } else {
                 Debug.LogFormat("Could not find external IP");
+                callback(false, "Communcation Error 06");
             }
         }
 
@@ -152,9 +233,9 @@ namespace Game.Managers {
             form.AddField("gen_code", genCode);
             form.AddField("hash", hash);
 
-            yield return Networking.PostRequest(SettingsManager.ipURL, form, webRequest => {
+            yield return Networking.PostRequest(SettingsManager.ipURL, form, (Action<UnityEngine.Networking.UnityWebRequest>)(webRequest => {
                 string text = webRequest.downloadHandler.text;
-                ServerRequest<CodeJSON> json = Functions.StringToJson<ServerRequest<CodeJSON>>(text);
+                ServerRequest<CodeJSON> json = Functions.StringJsonToObject<ServerRequest<CodeJSON>>((string)text);
                 if (json != null && json.data != null) {
                     string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
                     if (checkhash == json.hash) {
@@ -176,14 +257,14 @@ namespace Game.Managers {
                     Debug.LogErrorFormat("Invalid reponce: {0}", text);
                     callback(false, "Communcation Error 03");
                 }
-            });
+            }));
         }
 
         private static IEnumerator CoGetFolderData<T>(string url, Action<Dictionary<string, T>> callback) where T : IServerData {
 
-            yield return Networking.GetRequest(url, webRequest => {
+            yield return Networking.GetRequest(url, (Action<UnityEngine.Networking.UnityWebRequest>)(webRequest => {
                 string text = webRequest.downloadHandler.text;
-                ServerRequest<T> json = Functions.StringToJson<ServerRequest<T>>(text);
+                ServerRequest<T> json = Functions.StringJsonToObject<ServerRequest<T>>((string)text);
                 if (json != null && json.data != null) {
                     string checkhash = Cryptography.Md5Sum(json.timestamp + secretKey);
                     if (checkhash == json.hash) {
@@ -204,7 +285,7 @@ namespace Game.Managers {
                 } else {
                     Debug.LogErrorFormat("Invalid reponce: {0}", text);
                 }
-            });
+            }));
         }
 
         public static void Load() { }

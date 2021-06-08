@@ -17,7 +17,8 @@ public class UIPlayerTaskList : MonoBehaviour {
 
     private List<UITaskRow> displayedTasks;
 
-    public static bool Ready { get; private set; }
+    public bool FirstLoadDone { get; private set; }
+    public bool Ready { get; private set; }
 
     private void OnEnable() {
 
@@ -37,18 +38,23 @@ public class UIPlayerTaskList : MonoBehaviour {
     }
 
     void Update() {
-
+        if (!FirstLoadDone) {
+            UpdateTasks();
+        }
     }
 
     private void UpdateTasks() {
-        foreach(Task task in PlayerManager.LocalPlayer.AssignedTasks) {
-            if(!displayedTasks.Any(x => x.Task == task)) {
-                GameObject isntance = Instantiate(taskListRowPrefab, taskListContainer.transform);
-                Debug.Log(isntance.name);
-                UITaskRow taskRow = isntance.GetComponent<UITaskRow>();
-                taskRow.AssignTask(task);
-                displayedTasks.Add(taskRow);
+        if (PlayerManager.LocalPlayer != null) {
+            foreach (Task task in PlayerManager.LocalPlayer.AssignedTasks) {
+                if (!displayedTasks.Any(x => x.Task == task)) {
+                    GameObject isntance = Instantiate(taskListRowPrefab, taskListContainer.transform);
+                    Debug.Log(isntance.name);
+                    UITaskRow taskRow = isntance.GetComponent<UITaskRow>();
+                    taskRow.AssignTask(task);
+                    displayedTasks.Add(taskRow);
+                }
             }
+            FirstLoadDone = true;
         }
     }
 }

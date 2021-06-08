@@ -1,22 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Mirror;
 
 namespace Game.Teams {
-
+    [Serializable]
     public class Team {
-        public string Name { get; protected set; }
-        public string Id { get; protected set; }
 
+        [SerializeField]
+        public string Name { get; protected set; }
+        [SerializeField]
+        public string ID { get; protected set; }
+        [SerializeField]
         public string GenCode { get; protected set; }
+        [SerializeField]
         public int Score { get; protected set; }
 
-        public Team(string id, string name, string genCode) {
-            Name = name;
-            Id = id;
-            GenCode = genCode;
-            Score = 0;
+        public Team(string Name, string ID, string GenCode) {
+            this.Name = Name;
+            this.ID = ID;
+            this.GenCode = GenCode;
+            this.Score = 0;
         }
+        public Team() {}
 
         internal void AddScore(int value) {
             Score += value;
