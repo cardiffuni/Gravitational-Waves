@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using Mirror;
+using Game.Managers;
 
 namespace Game.Teams {
     [Serializable]
@@ -28,6 +29,7 @@ namespace Game.Teams {
             Score += value;
             TeamManager.TeamUpdated(this);
         }
+
         internal void SetScore(int value) {
             Score = value;
             TeamManager.TeamUpdated(this);

@@ -43,7 +43,7 @@ namespace Game.Managers {
             showDebugMessages = true;
             networkAddress = "localhost";
             KcpTransport = gameObject.GetOrAddComponent<KcpTransport>();
-            KcpTransport.debugGUI = true;
+            KcpTransport.debugGUI = false;
             //NetworkControllerHUD = gameObject.GetOrAddComponent<NetworkControllerHUD>();
             transport = KcpTransport;
             GameLobby = "GameLobby";

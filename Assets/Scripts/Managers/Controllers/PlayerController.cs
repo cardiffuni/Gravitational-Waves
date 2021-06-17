@@ -42,6 +42,7 @@ namespace Game.Managers.Controllers
             if (isLocalPlayer) {
                 PlayerCamera = transform.Find("Player Camera").GetComponent<Camera>();
                 CameraManager.Select(PlayerCamera);
+                Camera.SetupCurrent(PlayerCamera);
             }
         }
 
