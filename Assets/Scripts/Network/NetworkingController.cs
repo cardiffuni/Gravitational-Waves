@@ -28,6 +28,7 @@ namespace Game.Managers {
 
         public string PlayerView { get;  set; }
         public string ServerView { get; set; }
+        public string GameLobby { get; set; }
 
         public GameObject Zone { get; set; }
 
@@ -38,14 +39,15 @@ namespace Game.Managers {
         public override void Awake() {
             dontDestroyOnLoad = false;
             autoCreatePlayer = false;
-            //showDebugMessages = true;
+            showDebugMessages = true;
             networkAddress = "localhost";
             KcpTransport = gameObject.GetOrAddComponent<KcpTransport>();
             KcpTransport.debugGUI = true;
-            NetworkControllerHUD = gameObject.GetOrAddComponent<NetworkControllerHUD>();
+            //NetworkControllerHUD = gameObject.GetOrAddComponent<NetworkControllerHUD>();
             transport = KcpTransport;
-            
-            
+            GameLobby = "GameLobby";
+
+
             base.Awake();
         }
 
@@ -77,15 +79,17 @@ namespace Game.Managers {
         #endregion
 
         protected override void RegisterServerMessages() {
-
-
+            Debug.LogFormat("RegisterServerMessages");
+            NetworkServer.RegisterHandler<PlayerScore>(OnServerPlayerScoreInternal, false);
+            NetworkServer.RegisterHandler<TeamScore>(OnServerTeamScoreInternal, false);
 
             base.RegisterServerMessages();
         }
 
         protected override void RegisterClientMessages() {
-
+            Debug.LogFormat("RegisterClientMessages");
             NetworkClient.RegisterHandler<SubScenesMessage>(OnClientSubScenesInternal, false);
+            
             base.RegisterClientMessages();
         }
 
@@ -115,6 +119,26 @@ namespace Game.Managers {
             public bool customHandling;
         }
 
+        public enum ScoreOperation : byte {
+            Add,
+            Subtract,
+            Set
+        }
+
+        internal struct PlayerScore : NetworkMessage {
+            public int value;
+            // Add = 0, Subtract = 1, Set = 2
+            public ScoreOperation scoreOperation;
+            public bool customHandling;
+        }
+
+        internal struct TeamScore : NetworkMessage {
+            public int value;
+            // Add = 0, Subtract = 1, Set = 2
+            public ScoreOperation scoreOperation;
+            public bool customHandling;
+        }
+
         #region Server Internal Message Handlers
 
         #endregion
@@ -129,6 +153,23 @@ namespace Game.Managers {
                 ClientLoadSceneStack(msg.subSceneNames, msg.sceneOperation, msg.customHandling);
             }
         }
+
+        private void OnServerPlayerScoreInternal(NetworkConnection conn, PlayerScore msg) {
+            logger.Log("NetworkController.OnServerPlayerScoreInternal");
+
+            if (NetworkClient.isConnected && !NetworkServer.active) {
+                OnServerPlayerScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
+            }
+        }
+
+        private void OnServerTeamScoreInternal(NetworkConnection conn, TeamScore msg) {
+            logger.Log("NetworkController.OnServerTeamScoreInternal");
+
+            if (NetworkClient.isConnected && !NetworkServer.active) {
+                OnServerTeamScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
+            }
+        }
+        
 
         #endregion
 
@@ -279,6 +320,7 @@ namespace Game.Managers {
         /// <param name="conn">Connection from client.</param>
         public override void OnServerConnect(NetworkConnection conn) {
             Debug.LogFormat("Network Controller: Server Connect");
+            conn.Send(new SceneMessage { sceneName = GameLobby, sceneOperation = SceneOperation.Normal });
         }
 
         /// <summary>
@@ -289,6 +331,7 @@ namespace Game.Managers {
         public override void OnServerDisconnect(NetworkConnection conn) {
             Debug.LogFormat("Network Controller: Server Disconnect");
             NetworkServer.DestroyPlayerForConnection(conn);
+            PlayerManager.RemovePlayer(conn);
             logger.Log("OnServerDisconnect: Client disconnected.");
         }
 
@@ -380,6 +423,44 @@ namespace Game.Managers {
             Debug.LogFormat("Network Controller: Server Scene Changed");
         }
 
+        public void OnServerPlayerScoreChange(NetworkConnection conn, int value, ScoreOperation scoreOp = ScoreOperation.Add, bool customHandling = false) {
+            Debug.LogFormat("Network Controller: Server Player Score Change");
+            Player player = PlayerManager.Player(conn);
+            switch (scoreOp) {
+                case ScoreOperation.Add:
+                    player.AddScore(value);
+                    //PlayerManager.Players.AddOperation(SyncClassList<Player>.Operation.OP_SET, ownerInt, default, owner);
+                    //TeamManager.Teams.AddOperation(SyncClassList<Team>.Operation.OP_SET, ownerTeamInt, default, owner.Team);
+                    break;
+                case ScoreOperation.Subtract:
+                    player.AddScore(-value);
+                    break;
+                case ScoreOperation.Set:
+                    player.SetScore(value);
+                    break;
+            }
+            PlayerManager.Players.Updated(player);
+            PlayerManager.PlayerUpdated();
+        }
+
+        public void OnServerTeamScoreChange(NetworkConnection conn, int value, ScoreOperation scoreOp = ScoreOperation.Add, bool customHandling = false) {
+            Debug.LogFormat("Network Controller: Server Team Score Change");
+            Player player = PlayerManager.Player(conn);
+            switch (scoreOp) {
+                case ScoreOperation.Add:
+                    player.Team.AddScore(value);
+                    break;
+                case ScoreOperation.Subtract:
+                    player.Team.AddScore(-value);
+                    break;
+                case ScoreOperation.Set:
+                    player.Team.SetScore(value);
+                    break;
+            }
+            TeamManager.Teams.Updated(player.Team);
+            TeamManager.TeamUpdated();
+        }
+
         #endregion
 
         #region Client System Callbacks
@@ -398,10 +479,10 @@ namespace Game.Managers {
 
                 // Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
                 if (!ClientScene.ready) ClientScene.Ready(conn);
-                if(networkSceneName == "GameLobby" || networkSceneName == "NetworkLayer") {
-                    ClientScene.AddPlayer(conn);
-                }
                 
+            }
+            if(networkSceneName == GameLobby || networkSceneName == "NetworkLayer") {
+                ClientScene.AddPlayer(conn);
             }
             NetworkingManager.Connected(conn);
 
@@ -416,6 +497,7 @@ namespace Game.Managers {
             Debug.LogFormat("Network Controller: Client Disconnected/Failed to connect to Server");
             StopClient();
             NetworkingManager.Disconnected(conn);
+            NetworkingManager.NetworkDataController?.Destroy();
         }
 
         /// <summary>
@@ -426,6 +508,7 @@ namespace Game.Managers {
         public override void OnClientError(NetworkConnection conn, int errorCode) {
             Debug.LogFormat("Network Controller: Client error: {0}", errorCode);
             NetworkingManager.Error(conn, errorCode);
+            NetworkingManager.NetworkDataController?.Destroy();
         }
 
         /// <summary>
@@ -517,6 +600,7 @@ namespace Game.Managers {
             Debug.Log("Network Controller: Server Stopped");
             //NetworkServer.SendToAll(new SceneMessage { sceneName = GameScene, sceneOperation = SceneOperation.UnloadAdditive });
             //StartCoroutine(UnloadScenes());
+            NetworkingManager.NetworkDataController?.Destroy();
         }
 
         /// <summary>
@@ -525,6 +609,7 @@ namespace Game.Managers {
         public override void OnStopClient() {
             Debug.Log("Network Controller: Client Stopped");
             //StartCoroutine(UnloadScenes());
+            NetworkingManager.NetworkDataController?.Destroy();
         }
 
         #endregion

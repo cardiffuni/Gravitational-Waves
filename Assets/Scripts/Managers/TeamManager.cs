@@ -19,8 +19,14 @@ namespace Game.Managers {
 
 
         public static int NumTeams { get; private set; }
-        public static int TimeLimit { get; private set; }
+        public static float TimeLimit { get; private set; }
         public static bool TeamChat { get; private set; }
+
+        public static DateTime StartTime { get; private set; }
+        public static DateTime CurrentTime { get => DateTime.UtcNow; }
+        public static DateTime FinishTime { get => StartTime.AddMinutes(TimeLimit); }
+
+        public static TimeSpan TimeRemaining { get => FinishTime - StartTime; }
 
         public static bool Ready { get; private set; }
 
@@ -33,7 +39,11 @@ namespace Game.Managers {
         }
 
         public static void Load() {
+            SetDefaults();
+        }
 
+        public static void Reset() {
+            SetDefaults();
         }
 
         internal static void CreateTeams() {
@@ -57,6 +67,11 @@ namespace Game.Managers {
             onTeamUpdate?.Invoke();
         }
 
+        public static void TeamUpdated(SyncClassList<Team>.Operation op, int itemIndex, Team oldItem, Team newItem) {
+            TeamUpdated();
+        }
+        
+
         public static void SetTeamCount(int val) {
             NumTeams = val;
         }
@@ -77,6 +92,15 @@ namespace Game.Managers {
 
         internal static void StoreTeamCodes(Dictionary<string, CodeJSON> data) {
             teamCodes = data;
+        }
+
+        public static IEnumerator Countdown() {
+            StartTime = CurrentTime;
+            Debug.LogFormat("Countdown Started at {0}, Current Time {1}, Planned Finish {2}", StartTime, CurrentTime, FinishTime);
+            while (CurrentTime < FinishTime) {
+                yield return new WaitForSeconds(0.5f);
+            }
+            Debug.LogFormat("Countdown Started at {0}, Finished at {1}, Planned Finish {2}", StartTime, CurrentTime, FinishTime);
         }
     }
 }

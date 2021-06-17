@@ -3,39 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Game.Managers;
+using System;
+using System.Globalization;
 
-public class CountdownTimer : MonoBehaviour
-
-
-{
-    //delcaring vairiables used for the timer
-    public float StartingTime = 30f;
-    public float TargetTime = 0f;
-
-
+public class CountdownTimer : MonoBehaviour {
     private TMP_Text countdownText;
-    public float CurrentTime { get; private set; }
-
+    public TimeSpan TimeLeft { get => TeamManager.TimeRemaining; }
+    
     // Start is called before the first frame update
     void Start() {
         countdownText = transform.GetComponentInChildren<TMP_Text>();
-        CurrentTime = StartingTime;
-        
+        StartCoroutine(TeamManager.Countdown());
     }
 
     // Update is called once per frame
     void Update() {
-
-
-        //(Ignore if timer has stopped).
-        if (CurrentTime != TargetTime) {
-            //decreases timer minius one sec
-            float newtime = CurrentTime - Time.deltaTime;
-
-            //if below or equal to the target time, set to the target time, this will stop the timer.
-            CurrentTime = newtime <= TargetTime ? TargetTime : newtime;
-            countdownText.text = CurrentTime.ToString("0");
-            
-        }
+        string timeLeft = string.Format(CultureInfo.CurrentCulture, "{0}:{1}:{2}", TimeLeft.Hours, TimeLeft.Minutes, TimeLeft.Seconds);
+        countdownText.text = timeLeft;
     }
 }

@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static Game.Managers.NetworkingController;
 
 namespace Game.Managers {
 
@@ -111,6 +112,39 @@ namespace Game.Managers {
 
         public static void CheckAndGetIP(string genCode, Action<bool, string> callback) {
             InstanceManager.InstanceController.StartCoroutine(CoGetIP(genCode, callback));
+        }
+
+        public static void AddToPlayerScore(int value) {
+            LocalConn.Send(new PlayerScore { value = value, scoreOperation = ScoreOperation.Add });
+        }
+
+        public static void SubtractFromPlayerScore(int value) {
+            LocalConn.Send(new PlayerScore { value = value, scoreOperation = ScoreOperation.Subtract });
+        }
+
+        public static void SetPlayerScore(int value) {
+            LocalConn.Send(new PlayerScore { value = value, scoreOperation = ScoreOperation.Set });
+        }
+
+        public static void AddToTeamScore(int value) {
+            LocalConn.Send(new TeamScore { value = value, scoreOperation = ScoreOperation.Add });
+        }
+
+        public static void SubtractFromTeamScore(int value) {
+            LocalConn.Send(new TeamScore { value = value, scoreOperation = ScoreOperation.Subtract });
+        }
+
+        public static void SetTeamScore(int value) {
+            LocalConn.Send(new TeamScore { value = value, scoreOperation = ScoreOperation.Set });
+        }
+
+        internal static void StopNetworking() {
+            if (isServer) {
+                NetworkingController.StopServer();
+            }
+            if (isClient) {
+                NetworkingController.OnStopClient();
+            }
         }
 
         public static void GetTeamGenCodes(Action<bool, string> callback) {

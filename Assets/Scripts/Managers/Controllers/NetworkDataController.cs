@@ -26,6 +26,9 @@ namespace Game.Managers.Controllers {
         void Start() {
             Singleton = this;
             DontDestroyOnLoad(gameObject);
+            Teams.Callback += TeamManager.TeamUpdated;
+            Players.Callback += PlayerManager.PlayerUpdated;
+            
             Ready = true;
         }
 
@@ -40,6 +43,10 @@ namespace Game.Managers.Controllers {
         // Update is called once per frame
         void Update() {
 
+        }
+
+        internal void Destroy() {
+            Destroy(gameObject);
         }
     }
 }

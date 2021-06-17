@@ -133,7 +133,7 @@ public class UIConnectGame : MonoBehaviour {
     private void Connected() {
         string info = string.Format("Connected, loading...");
         GoodMsg(info);
-        StartCoroutine(NetworkingManager.LoadLobby());
+        //StartCoroutine(NetworkingManager.LoadLobby());
     }
 
     private void CantConnect() {

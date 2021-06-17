@@ -41,9 +41,11 @@ namespace Game.Managers {
 
             owner.AddScore(reward.PlayerAmount);
             owner.Team.AddScore(reward.TeamAmount);
-            
-            PlayerManager.Players.AddOperation(SyncClassList<Player>.Operation.OP_SET, ownerInt, default, owner);
-            TeamManager.Teams.AddOperation(SyncClassList<Team>.Operation.OP_SET, ownerTeamInt, default, owner.Team);
+
+            NetworkingManager.AddToPlayerScore(reward.PlayerAmount);
+            NetworkingManager.AddToTeamScore(reward.TeamAmount);
+            //PlayerManager.Players.AddOperation(SyncClassList<Player>.Operation.OP_SET, ownerInt, default, owner);
+            //TeamManager.Teams.AddOperation(SyncClassList<Team>.Operation.OP_SET, ownerTeamInt, default, owner.Team);
         }
 
         public static Reward Reward(string id) {

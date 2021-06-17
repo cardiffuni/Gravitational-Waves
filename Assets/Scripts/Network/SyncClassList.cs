@@ -130,7 +130,7 @@ namespace Game.Network {
 
         public void OnDeserializeAll(NetworkReader reader) {
             // This list can now only be modified by synchronization
-            //IsReadOnly = true;
+            IsReadOnly = true;
 
             // if init,  write the full list content
             int count = (int)reader.ReadUInt32();
@@ -152,7 +152,7 @@ namespace Game.Network {
 
         public void OnDeserializeDelta(NetworkReader reader) {
             // This list can now only be modified by synchronization
-            //IsReadOnly = true;
+            IsReadOnly = true;
 
             int changesCount = (int)reader.ReadUInt32();
 
@@ -315,6 +315,17 @@ namespace Game.Network {
                     objects[i] = value;
                     AddOperation(Operation.OP_SET, i, oldItem, value);
                 }
+            }
+        }
+
+        public void Updated(T value) {
+            int i = IndexOf(value);
+            Updated(i);
+        }
+
+        public void Updated(int i) {
+            if (i >= 0) {
+                AddOperation(Operation.OP_SET, i, default, objects[i]);
             }
         }
 

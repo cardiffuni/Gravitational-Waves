@@ -26,6 +26,7 @@ namespace Game.Tasks {
         public WaveData(List<List<float>> data) {
             OrgData = new List<Vector2>();
             OrgData = listToVector(data);
+            ModData = listToVector(data);
         }
 
         public WaveData(List<Vector2> data) {
@@ -50,7 +51,7 @@ namespace Game.Tasks {
             Name = value;
         }
         public void SetID(string value) {
-            Name = value;
+            ID = value;
         }
     }
 }

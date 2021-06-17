@@ -102,8 +102,8 @@ namespace Game.Tasks {
 
             //ObvservedWave = new WaveData(AssetManager.JSON<List<List<float>>>("GWINC_aLIGO_asd"));
             //PredictedWave = new WaveDataFitter(AssetManager.JSON<List<List<float>>>("GWINC_Aplus_asd"), TotalMassCorrect, DistanceCorrect, initalTotalMass, initalDistance);
-            ObvservedWave = AssetManager.Wave("GWINC_aLIGO_asd");
-            PredictedWave = AssetManager.Wave("GWINC_Aplus_asd");
+            ObvservedWave = AssetManager.Wave("GWINC_aLIGO_asd.json");
+            PredictedWave = AssetManager.Wave("GWINC_Aplus_asd.json");
 
 
             UpdateLineOnGraph(ObvservedWave, "GWINC_aLIGO_asd");
@@ -136,7 +136,7 @@ namespace Game.Tasks {
             }
 
 
-            foreach (Vector2 coords in wave.OrgData) {
+            foreach (Vector2 coords in wave.ModData) {
                 line.AddXYData(Mathf.Log10(coords.x), Mathf.Log10(coords.y));
             }
             updateMaxMin();

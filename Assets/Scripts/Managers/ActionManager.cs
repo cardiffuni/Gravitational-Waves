@@ -96,6 +96,7 @@ namespace Game.Managers {
 
         public static void LoadSceneMenuMain(){
             Debug.Log("Action: Main Menu");
+            NetworkingManager.StopNetworking();
             MySceneManager.LoadScene(MySceneManager.mainMenu);
         }
 
@@ -130,12 +131,14 @@ namespace Game.Managers {
 
         public static void SystemExit() {
             Debug.Log("Action: Quit");
+            NetworkingManager.StopNetworking();
             MySceneManager.MenuExitGame();
         }
 
         public static void SystemLoadPreviousScene() {
             Debug.Log("Action: Load Previous Scene");
             MySceneManager.LoadPreviousScene();
+            NetworkingManager.StopNetworking();
         }
 
         public static void UILoadOverlayMenu() {

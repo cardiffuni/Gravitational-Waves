@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace Game.Tasks {
-    public class WaveDataFitter : WaveData {
+    public class WaveDataFitter : WaveData, IWaveData {
         private WaveDataFitter old;
 
         public float T0 { get; protected set; }

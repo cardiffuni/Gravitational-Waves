@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Tasks {
-    public class TaskMirrorCleaning : MonoBehaviour, ITaskPrefab {
+    public class TaskHelloWorld : MonoBehaviour, ITaskPrefab {
 
         public Button CompleteBtn { get; private set; }
         public Toggle CheckBox { get; private set; }

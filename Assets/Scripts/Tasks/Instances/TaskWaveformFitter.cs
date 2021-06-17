@@ -28,19 +28,19 @@ namespace Game.Tasks {
         public Slider DistanceSlider { get; private set; }
         public TextMeshProUGUI DistanceLabel { get; private set; }
 
-        public float TotalMassCorrect = 65;
-        public float TotalMassMin = 20;
-        public float TotalMassMax = 100;
-        public float TotalMassStartMin = 30;
-        public float TotalMassStartMax = 90;
+        public float TotalMassCorrect => PredictedWave.TotalMassCorrect;
+        public float TotalMassMin => PredictedWave.TotalMassMin;
+        public float TotalMassMax => PredictedWave.TotalMassMax;
+        public float TotalMassStartMin => PredictedWave.TotalMassStartMin;
+        public float TotalMassStartMax => PredictedWave.TotalMassStartMax;
 
-        public float DistanceCorrect = 420;
-        public float DistanceMin = 100;
-        public float DistanceMax = 800;
-        public float DistanceStartMin = 200;
-        public float DistanceStartMax = 700;
+        public float DistanceCorrect => PredictedWave.DistanceCorrect;
+        public float DistanceMin => PredictedWave.DistanceMin;
+        public float DistanceMax => PredictedWave.DistanceMax;
+        public float DistanceStartMin => PredictedWave.DistanceStartMin;
+        public float DistanceStartMax => PredictedWave.DistanceStartMax;
 
-        public float WinConditionPercent = 5;
+        public float WinConditionPercent => PredictedWave.WinConditionPercent;
 
         private void OnEnable() {
             if (!Ready) {
@@ -93,22 +93,24 @@ namespace Game.Tasks {
             rect.offsetMin = new Vector2(left, bottom);
             rect.offsetMax = new Vector2(right, top);
 
+            Parent.Task.Started();
+
+            //ObvservedWave = new WaveData(AssetManager.JSON<List<List<float>>>("dataHanford"));
+            //PredictedWave = new WaveDataFitter(AssetManager.JSON<List<List<float>>>("NRsim"), TotalMassCorrect, DistanceCorrect, initalTotalMass, initalDistance);
+            ObvservedWave = AssetManager.Wave("dataHanford.json");
+            WaveDataFitter PredictedWaveFitter = AssetManager.Wave("NRsim.json") as WaveDataFitter;
+            PredictedWave = PredictedWaveFitter.Clone();
+
+
             float initalTotalMass = UnityEngine.Random.Range(TotalMassStartMin, TotalMassStartMax);
             float initalDistance = UnityEngine.Random.Range(DistanceStartMin, DistanceStartMax);
 
             initSliders(initalTotalMass, initalDistance);
 
-
-            Parent.Task.Started();
-
-            //ObvservedWave = new WaveData(AssetManager.JSON<List<List<float>>>("dataHanford"));
-            //PredictedWave = new WaveDataFitter(AssetManager.JSON<List<List<float>>>("NRsim"), TotalMassCorrect, DistanceCorrect, initalTotalMass, initalDistance);
-            ObvservedWave = AssetManager.Wave("dataHanford");
-            PredictedWave = (AssetManager.Wave("NRsim") as WaveDataFitter).Clone();
-
-
             UpdateLineOnGraph(ObvservedWave, "Data");
             UpdateLineOnGraph(PredictedWave, "Predicted");
+
+            RefreshChart();
 
             TotalMassSlider.onValueChanged.AddListener(SliderChanged);
             DistanceSlider.onValueChanged.AddListener(SliderChanged);

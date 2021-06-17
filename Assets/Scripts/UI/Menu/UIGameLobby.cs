@@ -1,6 +1,7 @@
 using Game.Managers;
 using Game.Players;
 using Game.Teams;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,11 +15,15 @@ public class UIGameLobby : MonoBehaviour {
 
     public GameObject LobbyContainer { get; private set; }
 
+    public ScrollRect LobbyScrollRect { get; private set; }
+    public GameObject LobbyContent { get; private set; }
+
     public GameObject NavigationContainer { get; private set; }
 
     public Button StartBtn { get; private set; }
     public Button BackBtn { get; private set; }
 
+    private int interval = 30;
 
     public bool Ready { get; private set; }
 
@@ -31,11 +36,17 @@ public class UIGameLobby : MonoBehaviour {
 
             LobbyContainer = MenuContainer.transform.Find("Lobby Container").gameObject;
 
+            LobbyScrollRect = LobbyContainer.transform.GetComponentInChildren<ScrollRect>();
+
+            LobbyContent = LobbyScrollRect.content.gameObject;
+
             NavigationContainer = transform.Find("Navigation").gameObject;
             StartBtn = NavigationContainer.transform.Find("Start Button").GetComponent<Button>();
             BackBtn = NavigationContainer.transform.Find("Back Button").GetComponent<Button>();
 
             TeamManager.AddTeamUpdateListener(UpdateTeams);
+            PlayerManager.AddPlayerUpdateListener(UpdateLobby);
+
             Ready = true;
         }
     }
@@ -58,24 +69,14 @@ public class UIGameLobby : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (NetworkingManager.isClient && NetworkingManager.NetworkDataController != null) {
-            if (Time.time > nextActionTime) {
-                nextActionTime += period;
-                Debug.LogFormat("Players size: {0}", PlayerManager.Players.Count);
-                foreach (Player player in PlayerManager.Players) {
-                    Debug.LogFormat("Player: Name {0}, ConnId {1}, Score {2}, Score {3}", player.Name, player.ConnId, player.Score, player.Score);
-                }
-                Debug.LogFormat("Team2 size: {0}", TeamManager.Teams.Count);
-                foreach (Team team in TeamManager.Teams) {
-                    Debug.LogFormat("Team: Name {0}, Id {1}, Score {2}, GenCode {3}", team.Name, team.ID, team.Score, team.GenCode);
-                }
-            }
-
+        if (Time.frameCount % interval == 0) {
+            UpdateLobby();
         }
     }
 
     private void OnDestroy() {
         TeamManager.RemoveTeamUpdateListener(UpdateTeams);
+        PlayerManager.RemovePlayerUpdateListener(UpdateLobby);
     }
 
     private void UpdateTeams() {
@@ -90,5 +91,20 @@ public class UIGameLobby : MonoBehaviour {
                 cell.SetLeftText(team.Name);
             }
         }
+    }
+
+    private void UpdateLobby() {
+        foreach (Transform child in LobbyContent.transform) {
+            Destroy(child.gameObject);
+        }
+        if (PlayerManager.Players != null) {
+            foreach (Player player in PlayerManager.Players) {
+                GameObject instance = InstanceManager.Instantiate("Lobby Player Row", LobbyContent);
+                UIRow row = instance.GetComponent<UIRow>();
+                row.SetRightText(player.Team.Name);
+                row.SetLeftText(player.Name);
+            }
+        }
+
     }
 }

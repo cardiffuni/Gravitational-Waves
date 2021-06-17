@@ -68,7 +68,9 @@ namespace Game.Players {
         internal void AddScore(int value) {
             Score += value;
         }
-
+        internal void SetScore(int value) {
+            Score = value;
+        }
         public void SetName(string value) {
             Name = value;
         }
