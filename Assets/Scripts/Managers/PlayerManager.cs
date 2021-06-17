@@ -81,9 +81,14 @@ namespace Game.Managers {
             Debug.LogFormat("Player Updated");
             onPlayerUpdate?.Invoke();
         }
-        public static void PlayerUpdated(SyncClassList<Player>.Operation op, int itemIndex, Player oldItem, Player newItem) {
-            Debug.LogFormat("Player {0} Updated", newItem.Name);
+        public static void PlayerUpdated(Player updated) {
+            Debug.LogFormat("Player {0} Updated", updated.Name);
             PlayerUpdated();
+        }
+
+        public static void PlayerUpdated(SyncClassList<Player>.Operation op, int itemIndex, Player oldItem, Player newItem) {
+            Debug.LogFormat("Player {0} Updated sync", newItem.Name);
+            PlayerUpdated(newItem);
         }
         internal static Player GetLocalPlayer() {
             //Debug.LogFormat("PlayerController: {0}", NetworkingManager.LocalConn?.identity?.GetComponent<PlayerController>());

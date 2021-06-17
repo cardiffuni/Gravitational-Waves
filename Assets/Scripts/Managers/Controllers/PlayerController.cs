@@ -39,8 +39,8 @@ namespace Game.Managers.Controllers
 
         public override void OnStartLocalPlayer() {
             Debug.LogFormat("OnStartLocalPlayer");
-            PlayerCamera = transform.Find("Player Camera").GetComponent<Camera>();
-            if (isClient) {
+            if (isLocalPlayer) {
+                PlayerCamera = transform.Find("Player Camera").GetComponent<Camera>();
                 CameraManager.Select(PlayerCamera);
             }
         }
@@ -51,7 +51,7 @@ namespace Game.Managers.Controllers
         }
 
         void OnDisable() {
-            if (isClient) {
+            if (isLocalPlayer) {
                 CameraManager.Overview();
             }
             

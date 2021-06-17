@@ -6,6 +6,7 @@ using Game.Extensions;
 using Game.Managers.Controllers;
 using Game.Network;
 using Game.Players;
+using Game.Tasks;
 using Game.Teams;
 using Game.Utility;
 using kcp2k;
@@ -80,6 +81,7 @@ namespace Game.Managers {
 
         protected override void RegisterServerMessages() {
             Debug.LogFormat("RegisterServerMessages");
+            NetworkServer.RegisterHandler<TaskUpdate>(OnTaskUpdateInternal, false);
             NetworkServer.RegisterHandler<PlayerScore>(OnServerPlayerScoreInternal, false);
             NetworkServer.RegisterHandler<TeamScore>(OnServerTeamScoreInternal, false);
 
@@ -125,6 +127,19 @@ namespace Game.Managers {
             Set
         }
 
+        public enum TaskOperation : byte {
+            Done,
+            Undone,
+            Other
+        }
+
+        internal struct TaskUpdate : NetworkMessage {
+            public string id;
+            // Add = 0, Subtract = 1, Set = 2
+            public TaskOperation taskOperation;
+            public bool customHandling;
+        }
+
         internal struct PlayerScore : NetworkMessage {
             public int value;
             // Add = 0, Subtract = 1, Set = 2
@@ -141,6 +156,25 @@ namespace Game.Managers {
 
         #region Server Internal Message Handlers
 
+
+        private void OnTaskUpdateInternal(NetworkConnection conn, TaskUpdate msg) {
+            logger.Log("NetworkController.OnServerTeamScoreInternal");
+
+            OnServerTaskUpdateChange(conn, msg.id, msg.taskOperation, msg.customHandling);
+        }
+
+        private void OnServerPlayerScoreInternal(NetworkConnection conn, PlayerScore msg) {
+            logger.Log("NetworkController.OnServerPlayerScoreInternal");
+
+            OnServerPlayerScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
+        }
+
+        private void OnServerTeamScoreInternal(NetworkConnection conn, TeamScore msg) {
+            logger.Log("NetworkController.OnServerTeamScoreInternal");
+
+            OnServerTeamScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
+        }
+
         #endregion
 
 
@@ -154,21 +188,6 @@ namespace Game.Managers {
             }
         }
 
-        private void OnServerPlayerScoreInternal(NetworkConnection conn, PlayerScore msg) {
-            logger.Log("NetworkController.OnServerPlayerScoreInternal");
-
-            if (NetworkClient.isConnected && !NetworkServer.active) {
-                OnServerPlayerScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
-            }
-        }
-
-        private void OnServerTeamScoreInternal(NetworkConnection conn, TeamScore msg) {
-            logger.Log("NetworkController.OnServerTeamScoreInternal");
-
-            if (NetworkClient.isConnected && !NetworkServer.active) {
-                OnServerTeamScoreChange(conn, msg.value, msg.scoreOperation, msg.customHandling);
-            }
-        }
         
 
         #endregion
@@ -422,6 +441,31 @@ namespace Game.Managers {
         public override void OnServerSceneChanged(string sceneName) {
             Debug.LogFormat("Network Controller: Server Scene Changed");
         }
+
+
+        public void OnServerTaskUpdateChange(NetworkConnection conn, string id, TaskOperation taskOp = TaskOperation.Done, bool customHandling = false) {
+            Debug.LogFormat("Network Controller: Server Team Score Change");
+            Player player = PlayerManager.Player(conn);
+            if(player.AssignedTasks.Any(x => x.ID == id)) {
+                Task task = player.AssignedTasks.First(x => x.ID == id);
+                switch (taskOp) {
+                    case TaskOperation.Done:
+                        task.CompleteRemote();
+                        break;
+                    case TaskOperation.Undone:
+                        task.CompleteRemote(false);
+                        break;
+                    case TaskOperation.Other:
+                        break;
+                }
+                PlayerManager.Players.Updated(player);
+                PlayerManager.PlayerUpdated();
+                TeamManager.Teams.Updated(player.Team);
+                TeamManager.TeamUpdated();
+            }
+
+        }
+
 
         public void OnServerPlayerScoreChange(NetworkConnection conn, int value, ScoreOperation scoreOp = ScoreOperation.Add, bool customHandling = false) {
             Debug.LogFormat("Network Controller: Server Player Score Change");

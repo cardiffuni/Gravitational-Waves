@@ -67,8 +67,14 @@ namespace Game.Managers {
             onTeamUpdate?.Invoke();
         }
 
-        public static void TeamUpdated(SyncClassList<Team>.Operation op, int itemIndex, Team oldItem, Team newItem) {
+        public static void TeamUpdated(Team updated) {
+            Debug.LogFormat("Team {0} Updated", updated.Name);
             TeamUpdated();
+        }
+
+        public static void TeamUpdated(SyncClassList<Team>.Operation op, int itemIndex, Team oldItem, Team newItem) {
+            Debug.LogFormat("Team {0} Updated sync", newItem.Name);
+            TeamUpdated(newItem);
         }
         
 

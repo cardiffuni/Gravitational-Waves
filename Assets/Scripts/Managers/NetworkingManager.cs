@@ -114,6 +114,18 @@ namespace Game.Managers {
             InstanceManager.InstanceController.StartCoroutine(CoGetIP(genCode, callback));
         }
 
+        public static void TaskDone(string id) {
+            LocalConn.Send(new TaskUpdate { id = id, taskOperation = TaskOperation.Done });
+        }
+
+        public static void TaskUndone(string id) {
+            LocalConn.Send(new TaskUpdate { id = id, taskOperation = TaskOperation.Undone });
+        }
+
+        public static void TaskOther(string id) {
+            LocalConn.Send(new TaskUpdate { id = id, taskOperation = TaskOperation.Other });
+        }
+
         public static void AddToPlayerScore(int value) {
             LocalConn.Send(new PlayerScore { value = value, scoreOperation = ScoreOperation.Add });
         }

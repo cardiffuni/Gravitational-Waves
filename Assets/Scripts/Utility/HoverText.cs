@@ -43,8 +43,9 @@ public class HoverText : MonoBehaviour {
         //if (movement != Vector3.zero) {
         //transform.rotation = Quaternion.LookRotation(movement);
         //}
-        if (CameraManager.Current) {
-            transform.rotation = Quaternion.Euler(0, CameraManager.Current.transform.rotation.eulerAngles.y, 0);
+        
+        if (Camera.current != null) {
+            transform.rotation = Quaternion.Euler(0, Camera.current.transform.rotation.eulerAngles.y, 0);
         }
     }
 

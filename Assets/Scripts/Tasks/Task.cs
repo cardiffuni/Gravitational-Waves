@@ -66,6 +66,20 @@ namespace Game.Tasks {
             if (IsCompleted) {
                 Debug.LogFormat("Task {0} Completed!", Name);
                 IsInProgress = false;
+                NetworkingManager.TaskDone(ID);
+
+                ScoreManager.AddScore(Owner, Reward);
+                TaskManager.TaskUpdated();
+            } else {
+                Debug.LogFormat("Task {0} reset", Name);
+            }
+        }
+
+        public void CompleteRemote(bool value = true) {
+            IsCompleted = value;
+            if (IsCompleted) {
+                Debug.LogFormat("Task {0} Completed!", Name);
+                IsInProgress = false;
                 ScoreManager.AddScore(Owner, Reward);
                 TaskManager.TaskUpdated();
             } else {

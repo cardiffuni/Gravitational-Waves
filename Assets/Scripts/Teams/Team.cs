@@ -26,9 +26,11 @@ namespace Game.Teams {
 
         internal void AddScore(int value) {
             Score += value;
+            TeamManager.TeamUpdated(this);
         }
         internal void SetScore(int value) {
             Score = value;
+            TeamManager.TeamUpdated(this);
         }
         public string GetDescription() {
             return string.Format("Score: {0}", Score);

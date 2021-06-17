@@ -67,12 +67,15 @@ namespace Game.Players {
 
         internal void AddScore(int value) {
             Score += value;
+            PlayerManager.PlayerUpdated(this);
         }
         internal void SetScore(int value) {
             Score = value;
+            PlayerManager.PlayerUpdated(this);
         }
         public void SetName(string value) {
             Name = value;
+            PlayerManager.PlayerUpdated(this);
         }
 
         public string GetDescription() {
@@ -86,6 +89,7 @@ namespace Game.Players {
         public void AssignTask(Task task) {
             task.SetOwner(this);
             AssignedTasks.Add(task);
+            PlayerManager.PlayerUpdated();
         }
 
         public float PercentageTasksComplete() {
